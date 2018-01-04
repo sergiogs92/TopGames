@@ -71,8 +71,9 @@ class GameListFragment : Fragment(), GameListView {
         errorView.visibility = View.GONE
     }
 
-    override fun showToastError() {
-        Toast.makeText(context, getString(R.string.errorLoadingMessage), Toast.LENGTH_SHORT).show()
+    override fun showToastError(message: String?) {
+        val errorMessage = message ?: getString(R.string.errorLoadingMessage)
+        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
     }
 
     override fun clearList() {

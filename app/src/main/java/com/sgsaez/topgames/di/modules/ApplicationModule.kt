@@ -7,6 +7,7 @@ import com.sgsaez.topgames.data.repositories.DefaultGameRepository
 import com.sgsaez.topgames.data.repositories.GameRepository
 import com.sgsaez.topgames.data.service.GameService
 import com.sgsaez.topgames.utils.AppSchedulerProvider
+import com.sgsaez.topgames.utils.ConnectivityChecker
 import com.sgsaez.topgames.utils.SchedulerProvider
 import dagger.Module
 import dagger.Provides
@@ -34,12 +35,17 @@ class ApplicationModule(val application: TopGamesApplication) {
 
     @Provides
     @Singleton
-    fun provideGameRepository(retrofit: Retrofit): GameRepository {
+    fun provideGameRepository(retrofit: Retrofit, connectivityChecker: ConnectivityChecker): GameRepository {
         return DefaultGameRepository(
-                retrofit.create(GameService::class.java))
+                retrofit.create(GameService::class.java),
+                connectivityChecker)
     }
 
     @Provides
     @Singleton
     fun provideSchedulerProvider(): SchedulerProvider = AppSchedulerProvider()
+
+    @Provides
+    @Singleton
+    fun provideConnectionHelper(context: Context) = ConnectivityChecker(context)
 }

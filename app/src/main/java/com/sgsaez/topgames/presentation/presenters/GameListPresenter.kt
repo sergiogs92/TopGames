@@ -18,7 +18,7 @@ class GameListPresenter(private val getGames: GetGames,
                 }, {
                     view?.hideLoading()
                     view?.showEmptyListError()
-                    view?.showToastError()
+                    view?.showToastError(it.message)
                 })
     }
 }

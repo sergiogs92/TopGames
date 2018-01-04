@@ -8,6 +8,6 @@ interface GameListView {
     fun addGameToList(games: List<Game>)
     fun showEmptyListError()
     fun hideEmptyListError()
-    fun showToastError()
+    fun showToastError(message: String?)
     fun clearList()
 }
