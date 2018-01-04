@@ -37,8 +37,10 @@ class GameListFragment : Fragment(), GameListView {
         initSwipeLayout()
         initAdapter()
         presenter.attachView(this)
-        showLoading()
-        presenter.getGames(true)
+        if (gameListAdapter.itemCount == 0) {
+            showLoading()
+            presenter.getGames(true)
+        }
     }
 
     private fun initSwipeLayout() = swipeRefreshLayout.setOnRefreshListener({ presenter.getGames(isRefresh = true) })
