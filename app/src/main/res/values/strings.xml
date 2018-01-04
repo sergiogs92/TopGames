@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TopGames</string>
+    <string name="errorLoadingMessage">Error loading data</string>
 </resources>

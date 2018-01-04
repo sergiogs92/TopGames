@@ -15,7 +15,7 @@ class DefaultGameRepository(private val gameService: GameService) : GameReposito
 
     private fun loadGames(emitter: SingleEmitter<GameList>) = try {
         val games = gameService.getGames().execute().body()
-        if (games != null) emitter.onSuccess(games) else emitter.onError(Exception("No data received"))
+        if (games != null) emitter.onSuccess(games) else emitter.onError(Exception())
     } catch (exception: Exception) {
         emitter.onError(exception)
     }

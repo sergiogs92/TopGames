@@ -11,7 +11,7 @@ class GetGames(private val gameRepository: GameRepository) {
         val games = gameRepository.getGames()
         return games.map { gameList: GameList? ->
             val items = gameList?.results ?: emptyList()
-            items.map { Game(it.alias) }
+            items.map { Game(it.name, it.image) }
         }
     }
 }
