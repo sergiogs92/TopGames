@@ -13,7 +13,9 @@ import com.sgsaez.topgames.di.modules.GameListFragmentModule
 import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
+import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.presentation.view.adapters.GameListAdapter
+import com.sgsaez.topgames.utils.NotParcelled.toNotParcelled
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_game_list.*
 
@@ -23,7 +25,7 @@ class GameListFragment : Fragment(), GameListView {
     private val component by lazy { topGamesApplication.component.plus(GameListFragmentModule()) }
     private val gameListAdapter by lazy {
         val gameList = mutableListOf<Game>()
-        GameListAdapter(gameList) { user, view -> openDetailFragment(user, view) }
+        GameListAdapter(gameList) { game, _ -> navigateToDetailFragment(game) }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -80,8 +82,9 @@ class GameListFragment : Fragment(), GameListView {
         gameListAdapter.clearGames()
     }
 
-    private fun openDetailFragment(game: Game, view: View) {
-        //TODO: navigate to detail game
+    private fun navigateToDetailFragment(game: Game) {
+        val detailsFragment = GameDetailFragment.newInstance(toNotParcelled(game))
+        (activity as MainActivity).addDetailFragment(detailsFragment)
     }
 
     override fun onDestroyView() {

@@ -1,5 +1,6 @@
 package com.sgsaez.topgames.utils
 
+import android.os.Build
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,4 +17,10 @@ val Fragment.topGamesApplication: TopGamesApplication
 
 fun ImageView.loadUrl(url: String) {
     Glide.with(context).load(url).into(this)
+}
+
+fun isNougatOrAbove(func: () -> Unit) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        func()
+    }
 }

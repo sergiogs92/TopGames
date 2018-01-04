@@ -1,6 +1,7 @@
 package com.sgsaez.topgames.presentation.view.activities
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.presentation.view.fragments.GameListFragment
@@ -17,6 +18,14 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, GameListFragment())
+                .commit()
+    }
+
+    fun addDetailFragment(fragment: Fragment) {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack("")
                 .commit()
     }
 }
