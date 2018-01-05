@@ -48,15 +48,16 @@ class GameListFragment : Fragment(), GameListView {
         toolbar.title = resources.getString(R.string.app_name)
     }
 
-    private fun initSwipeLayout() = swipeRefreshLayout.setOnRefreshListener({ presenter.getGames(isRefresh = true) })
+    private fun initSwipeLayout() = swipeRefreshLayout.apply {
+        setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
+        setOnRefreshListener({ presenter.getGames(isRefresh = true) })
+    }
 
-    private fun initAdapter() {
-        recyclerView.apply {
-            setHasFixedSize(true)
-            val orientation = resources.configuration.orientation
-            layoutManager = GridLayoutManager(context, if (orientation == ORIENTATION_PORTRAIT) 2 else 3)
-            adapter = gameListAdapter
-        }
+    private fun initAdapter() = recyclerView.apply {
+        setHasFixedSize(true)
+        val orientation = resources.configuration.orientation
+        layoutManager = GridLayoutManager(context, if (orientation == ORIENTATION_PORTRAIT) 2 else 3)
+        adapter = gameListAdapter
     }
 
     override fun showLoading() {
