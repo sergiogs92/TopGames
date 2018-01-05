@@ -2,6 +2,7 @@ package com.sgsaez.topgames.utils
 
 import android.os.Build
 import android.support.v4.app.Fragment
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,9 +26,10 @@ fun isLollipopOrAbove(func: () -> Unit) {
     }
 }
 
-fun isNougatOrAbove(func: () -> Unit) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        func()
-    }
+@Suppress("DEPRECATION")
+fun String.fromHtml() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+    Html.fromHtml(this, Html.FROM_HTML_MODE_COMPACT);
+} else {
+    Html.fromHtml(this)
 }
 

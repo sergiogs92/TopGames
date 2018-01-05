@@ -1,18 +1,16 @@
 package com.sgsaez.topgames.presentation.presenters
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Environment
-import android.text.Html
 import android.widget.ImageView
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.view.GameDetailView
-import com.sgsaez.topgames.utils.isNougatOrAbove
+import com.sgsaez.topgames.utils.fromHtml
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -24,17 +22,13 @@ class GameDetailPresenter(private val context: Context) : BasePresenter<GameDeta
 
     fun paintDetail(game: Game) {
         view?.addTitleToolbar(game.name)
-        view?.addDescription(convertHtmlText(game.description))
+        view?.addDescription(convertFromHtml(game.description))
         view?.addImage(game.image.url)
     }
 
-    @SuppressLint("NewApi")
-    private fun convertHtmlText(description: String?): String {
-        var detail: String = description ?: context.getString(R.string.noDescription)
-        isNougatOrAbove {
-            detail = Html.fromHtml(description ?: context.getString(R.string.noDescription), 0).toString()
-        }
-        return detail
+    private fun convertFromHtml(description: String?): String {
+        val noDescription = context.getString(R.string.noDescription);
+        return description?.fromHtml()?.toString() ?: noDescription
     }
 
     fun setUpIntentShared(game: Game, image: ImageView) {
