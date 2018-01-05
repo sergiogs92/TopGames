@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.data.service
+package com.sgsaez.topgames.data.network
 
 import com.sgsaez.topgames.presentation.model.GameList
 import retrofit2.Call

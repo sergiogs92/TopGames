@@ -1,8 +1,8 @@
 package com.sgsaez.topgames.data.repositories
 
-import com.sgsaez.topgames.data.service.GameService
+import com.sgsaez.topgames.data.network.GameService
+import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
 import com.sgsaez.topgames.presentation.model.GameList
-import com.sgsaez.topgames.utils.ConnectivityChecker
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 

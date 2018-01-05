@@ -3,11 +3,12 @@ package com.sgsaez.topgames.di.modules
 import android.content.Context
 import com.google.gson.Gson
 import com.sgsaez.topgames.TopGamesApplication
+import com.sgsaez.topgames.data.network.GameService
+import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
+import com.sgsaez.topgames.data.network.connectivity.DeviceConnectivity
 import com.sgsaez.topgames.data.repositories.DefaultGameRepository
 import com.sgsaez.topgames.data.repositories.GameRepository
-import com.sgsaez.topgames.data.service.GameService
 import com.sgsaez.topgames.utils.AppSchedulerProvider
-import com.sgsaez.topgames.utils.ConnectivityChecker
 import com.sgsaez.topgames.utils.SchedulerProvider
 import dagger.Module
 import dagger.Provides
@@ -47,5 +48,5 @@ class ApplicationModule(val application: TopGamesApplication) {
 
     @Provides
     @Singleton
-    fun provideConnectionHelper(context: Context) = ConnectivityChecker(context)
+    fun provideConnectivityChecker(context: Context): ConnectivityChecker = DeviceConnectivity(context)
 }
