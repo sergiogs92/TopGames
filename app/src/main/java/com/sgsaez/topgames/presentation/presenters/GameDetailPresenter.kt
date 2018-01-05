@@ -11,7 +11,7 @@ import com.sgsaez.topgames.utils.isNougatOrAbove
 class GameDetailPresenter(private val context: Context) : BasePresenter<GameDetailView>() {
 
     fun paintDetail(game: Game) {
-        view?.addTitle(game.name)
+        view?.addTitleToolbar(game.name)
         view?.addDescription(convertHtmlText(game.description))
         view?.addImage(game.image.url)
     }

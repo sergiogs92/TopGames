@@ -34,6 +34,7 @@ class GameListFragment : Fragment(), GameListView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initToolbar()
         initSwipeLayout()
         initAdapter()
         presenter.attachView(this)
@@ -41,6 +42,10 @@ class GameListFragment : Fragment(), GameListView {
             showLoading()
             presenter.getGames(true)
         }
+    }
+
+    private fun initToolbar() {
+        toolbar.title = resources.getString(R.string.app_name)
     }
 
     private fun initSwipeLayout() = swipeRefreshLayout.setOnRefreshListener({ presenter.getGames(isRefresh = true) })

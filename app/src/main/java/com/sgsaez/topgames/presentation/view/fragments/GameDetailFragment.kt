@@ -38,13 +38,21 @@ class GameDetailFragment : Fragment(), GameDetailView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initToolbar()
         presenter.attachView(this)
         val game = fromNotParcelled(arguments.getString(GAME_KEY), Game::class.java)
         presenter.paintDetail(game)
     }
 
-    override fun addTitle(name: String) {
-        title.text = name
+    private fun initToolbar() {
+        toolbar.apply {
+            setNavigationIcon(R.drawable.ic_action_back)
+            setNavigationOnClickListener { activity.onBackPressed() }
+        }
+    }
+
+    override fun addTitleToolbar(name: String) {
+        toolbar.title = name
     }
 
     override fun addDescription(content: String) {
