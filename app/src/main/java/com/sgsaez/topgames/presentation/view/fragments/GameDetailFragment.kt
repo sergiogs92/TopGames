@@ -11,6 +11,7 @@ import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
 import com.sgsaez.topgames.presentation.view.GameDetailView
 import com.sgsaez.topgames.utils.NotParcelled.fromNotParcelled
+import com.sgsaez.topgames.utils.isLollipopOrAbove
 import com.sgsaez.topgames.utils.loadUrl
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.description_item.*
@@ -39,8 +40,9 @@ class GameDetailFragment : Fragment(), GameDetailView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
-        presenter.attachView(this)
         val game = fromNotParcelled(arguments.getString(GAME_KEY), Game::class.java)
+        initFloatingButton(game)
+        presenter.attachView(this)
         presenter.paintDetail(game)
     }
 
@@ -48,6 +50,15 @@ class GameDetailFragment : Fragment(), GameDetailView {
         toolbar.apply {
             setNavigationIcon(R.drawable.ic_action_back)
             setNavigationOnClickListener { activity.onBackPressed() }
+        }
+    }
+
+    private fun initFloatingButton(game: Game) {
+        isLollipopOrAbove() {
+            floatingButton.apply {
+                visibility = View.VISIBLE
+                setOnClickListener { presenter.setUpIntentShared(game, image) }
+            }
         }
     }
 

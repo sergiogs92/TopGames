@@ -61,4 +61,18 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:borderWidth="0dp"
+        android:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        app:rippleColor="@color/white"
+        android:src="@drawable/ic_share"
+        android:visibility="gone"
+        app:layout_anchor="@id/appBarLayout"
+        app:layout_anchorGravity="bottom|right|end"/>
+
 </android.support.design.widget.CoordinatorLayout>

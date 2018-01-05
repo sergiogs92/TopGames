@@ -1,6 +1,7 @@
 package com.sgsaez.topgames
 
 import android.app.Application
+import android.os.StrictMode
 import com.sgsaez.topgames.di.components.ApplicationComponent
 import com.sgsaez.topgames.di.components.DaggerApplicationComponent
 import com.sgsaez.topgames.di.modules.ApplicationModule
@@ -13,6 +14,7 @@ class TopGamesApplication : Application() {
         super.onCreate()
         initAppComponent()
         component.inject(this)
+        ignoreURIExposure()
     }
 
     private fun initAppComponent() {
@@ -22,4 +24,8 @@ class TopGamesApplication : Application() {
                 .build()
     }
 
+    private fun ignoreURIExposure() {
+        val builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+    }
 }

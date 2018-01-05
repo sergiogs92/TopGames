@@ -2,4 +2,5 @@
     <string name="app_name">TopGames</string>
     <string name="errorLoadingMessage">Error loading data</string>
     <string name="noDescription">No description</string>
+    <string name="default_image_name">image_shared.png</string>
 </resources>

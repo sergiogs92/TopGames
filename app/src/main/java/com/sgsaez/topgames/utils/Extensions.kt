@@ -19,8 +19,15 @@ fun ImageView.loadUrl(url: String) {
     Glide.with(context).load(url).into(this)
 }
 
+fun isLollipopOrAbove(func: () -> Unit) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        func()
+    }
+}
+
 fun isNougatOrAbove(func: () -> Unit) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         func()
     }
 }
+
