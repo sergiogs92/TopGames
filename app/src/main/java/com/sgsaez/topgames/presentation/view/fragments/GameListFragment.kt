@@ -56,7 +56,7 @@ class GameListFragment : Fragment(), GameListView {
     private fun initAdapter() = recyclerView.apply {
         setHasFixedSize(true)
         val orientation = resources.configuration.orientation
-        layoutManager = GridLayoutManager(context, if (orientation == ORIENTATION_PORTRAIT) 2 else 3)
+        layoutManager = GridLayoutManager(context, if (orientation == ORIENTATION_PORTRAIT) 3 else 5)
         adapter = gameListAdapter
     }
 
