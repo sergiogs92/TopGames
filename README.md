@@ -1,5 +1,5 @@
 # TopGames
-My first Kotlin App Based on a list of games. You can access the details of each game and share the corresponding information through social networks.
+My first Kotlin App based on a list of games. You can access the details of each game and share the corresponding information through social networks. This app includes offline access.
 ## About the app
 #### Portrait ####
 ![alt text](https://github.com/sergiogs92/TopGames/blob/master/img/list_portrait_orientation.png?raw=true)
