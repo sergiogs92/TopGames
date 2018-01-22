@@ -1,13 +1,14 @@
 package com.sgsaez.topgames.presentation.presenters
 
 import com.sgsaez.topgames.domain.GetGames
+import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.utils.SchedulerProvider
 
 class GameListPresenter(private val getGames: GetGames,
                         private val schedulerProvider: SchedulerProvider) : BasePresenter<GameListView>() {
 
-    fun getGames(isRefresh: Boolean = false) {
+    fun onInit(isRefresh: Boolean = false) {
         getGames.execute()
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
@@ -17,8 +18,11 @@ class GameListPresenter(private val getGames: GetGames,
                     view?.hideLoading()
                 }, {
                     view?.hideLoading()
-                    view?.showEmptyListError()
                     view?.showToastError(it.message)
                 })
+    }
+
+    fun onGameClicked(game: Game) {
+        view?.navigateToGame(game)
     }
 }

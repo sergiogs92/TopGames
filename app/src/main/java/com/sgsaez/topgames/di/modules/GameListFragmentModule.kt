@@ -8,7 +8,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class GameListFragmentModule() {
+class GameListFragmentModule {
     @Provides
     fun provideGetGames(gameRepository: GameRepository) = GetGames(gameRepository)
 

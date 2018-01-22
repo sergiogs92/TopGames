@@ -6,8 +6,7 @@ interface GameListView {
     fun showLoading()
     fun hideLoading()
     fun addGameToList(games: List<Game>)
-    fun showEmptyListError()
-    fun hideEmptyListError()
     fun showToastError(message: String?)
     fun clearList()
+    fun navigateToGame(game: Game)
 }

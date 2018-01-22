@@ -25,7 +25,7 @@ class GameListFragment : Fragment(), GameListView {
     private val component by lazy { topGamesApplication.component.plus(GameListFragmentModule()) }
     private val gameListAdapter by lazy {
         val gameList = mutableListOf<Game>()
-        GameListAdapter(gameList) { game, _ -> navigateToDetailFragment(game) }
+        GameListAdapter(gameList) { game, _ -> presenter.onGameClicked(game) }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,7 +40,7 @@ class GameListFragment : Fragment(), GameListView {
         presenter.attachView(this)
         if (gameListAdapter.itemCount == 0) {
             showLoading()
-            presenter.getGames(true)
+            presenter.onInit(true)
         }
     }
 
@@ -50,7 +50,7 @@ class GameListFragment : Fragment(), GameListView {
 
     private fun initSwipeLayout() = swipeRefreshLayout.apply {
         setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
-        setOnRefreshListener({ presenter.getGames(isRefresh = true) })
+        setOnRefreshListener({ presenter.onInit(isRefresh = true) })
     }
 
     private fun initAdapter() = recyclerView.apply {
@@ -73,14 +73,6 @@ class GameListFragment : Fragment(), GameListView {
         adapter.addGames(games)
     }
 
-    override fun showEmptyListError() {
-        errorView.visibility = View.VISIBLE
-    }
-
-    override fun hideEmptyListError() {
-        errorView.visibility = View.GONE
-    }
-
     override fun showToastError(message: String?) {
         val errorMessage = message ?: getString(R.string.errorLoadingMessage)
         Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
@@ -90,7 +82,7 @@ class GameListFragment : Fragment(), GameListView {
         gameListAdapter.clearGames()
     }
 
-    private fun navigateToDetailFragment(game: Game) {
+    override fun navigateToGame(game: Game) {
         val detailsFragment = GameDetailFragment.newInstance(toNotParcelled(game))
         (activity as MainActivity).addDetailFragment(detailsFragment)
     }
