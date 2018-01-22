@@ -26,33 +26,20 @@ class GameDetailPresenterTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        gameDetailPresenter = GameDetailPresenter(context)
+        gameDetailPresenter = GameDetailPresenter()
     }
 
     @Test
     fun testGetGameDetailCorrectCaseShowNoDescription() {
+        val noDescription = "No description"
         val game = Game("1", null, "My game", Image("url"))
-        val description = "No description"
 
-        `when`(context.getString(anyInt())).thenReturn(description)
+        `when`(context.getString(anyInt())).thenReturn(noDescription)
         gameDetailPresenter.attachView(mockView)
-        gameDetailPresenter.paintDetail(game)
+        gameDetailPresenter.onInit(noDescription, game)
 
         Mockito.verify(mockView).addTitleToolbar(game.name)
-        Mockito.verify(mockView).addDescription(description)
-        Mockito.verify(mockView).addImage(game.image.url)
-    }
-
-    @Test
-    fun testGetGameDetailCorrectCaseShowGame() {
-        val game = Game("1", "This is the game", "My game", Image("url"))
-
-        `when`(context.getString(anyInt())).thenReturn(game.description)
-        gameDetailPresenter.attachView(mockView)
-        gameDetailPresenter.paintDetail(game)
-
-        Mockito.verify(mockView).addTitleToolbar(game.name)
-        Mockito.verify(mockView).addDescription(game.description!!)
+        Mockito.verify(mockView).addDescription(noDescription)
         Mockito.verify(mockView).addImage(game.image.url)
     }
 }
