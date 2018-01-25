@@ -3,4 +3,7 @@
     <string name="errorLoadingMessage">Error loading data</string>
     <string name="noDescription">No description</string>
     <string name="default_image_name">image_shared.png</string>
+    <string name="search">Search</string>
+    <string name="search_game">Search game</string>
+    <string name="search_title">Search: %s</string>
 </resources>

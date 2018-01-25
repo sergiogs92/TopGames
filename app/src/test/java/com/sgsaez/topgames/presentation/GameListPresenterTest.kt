@@ -42,9 +42,9 @@ class GameListPresenterTest {
             emitter.onError(Exception(error))
         }
 
-        `when`(mockGetGames.execute()).thenReturn(single)
+        `when`(mockGetGames.execute("")).thenReturn(single)
         gameListPresenter.attachView(mockView)
-        gameListPresenter.onInit()
+        gameListPresenter.onLoadGames("")
         testScheduler.triggerActions()
 
         Mockito.verify(mockView).hideLoading()
@@ -58,9 +58,9 @@ class GameListPresenterTest {
             emitter.onSuccess(games)
         }
 
-        `when`(mockGetGames.execute()).thenReturn(single)
+        `when`(mockGetGames.execute("")).thenReturn(single)
         gameListPresenter.attachView(mockView)
-        gameListPresenter.onInit()
+        gameListPresenter.onLoadGames("")
         testScheduler.triggerActions()
 
         Mockito.verify(mockView).addGameToList(games)

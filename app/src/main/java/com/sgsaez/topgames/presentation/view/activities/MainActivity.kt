@@ -11,17 +11,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        addGameListFragment()
+        val listFragment = GameListFragment.newInstance("")
+        (addFragment(listFragment))
     }
 
-    private fun addGameListFragment() {
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, GameListFragment())
-                .commit()
-    }
-
-    fun addDetailFragment(fragment: Fragment) {
+    fun addFragment(fragment: Fragment) {
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)

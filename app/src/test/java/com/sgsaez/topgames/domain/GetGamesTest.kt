@@ -30,9 +30,9 @@ class GetGamesTest {
     fun testGameListWithOneItemEmitListWithOneGame() {
         val mockSingle = Single.create { e: SingleEmitter<GameList>? -> e?.onSuccess(GameList(listOf(EGame("1", "This is the game", "My game", Image("url"))))) }
 
-        `when`(mockGameRepository.getGames()).thenReturn(mockSingle)
+        `when`(mockGameRepository.getGames("")).thenReturn(mockSingle)
 
-        val resultSingle = getGames.execute()
+        val resultSingle = getGames.execute("")
         val testObserver = resultSingle.test()
         testObserver.assertNoErrors()
         testObserver.assertValue { games: List<Game> -> games.size == 1 }
@@ -45,9 +45,9 @@ class GetGamesTest {
     fun testExecuteGameListEmptyEmitEmptyList() {
         val mockSingle = Single.create { e: SingleEmitter<GameList>? -> e?.onSuccess(GameList(emptyList())) }
 
-        `when`(mockGameRepository.getGames()).thenReturn(mockSingle)
+        `when`(mockGameRepository.getGames("")).thenReturn(mockSingle)
 
-        val resultSingle = getGames.execute()
+        val resultSingle = getGames.execute("")
         val testObserver = resultSingle.test()
         testObserver.assertNoErrors()
         testObserver.assertValue { userViewModels: List<Game> -> userViewModels.isEmpty() }

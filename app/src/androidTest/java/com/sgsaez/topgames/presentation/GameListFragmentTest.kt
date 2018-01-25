@@ -3,7 +3,7 @@ package com.sgsaez.topgames.presentation
 import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
@@ -11,6 +11,8 @@ import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView
+import android.widget.EditText
+import android.widget.TextView
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import com.sgsaez.topgames.R
@@ -25,10 +27,13 @@ import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.utils.RecyclerViewMatcher
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.instanceOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @RunWith(AndroidJUnit4::class)
 class GameListFragmentTest {
@@ -79,9 +84,26 @@ class GameListFragmentTest {
     }
 
     private fun checkElementsDisplayInDetail() {
-        onView(withId(R.id.toolbar)).check(ViewAssertions.matches(isDisplayed()))
+        onView(withId(R.id.detailToolbar)).check(ViewAssertions.matches(isDisplayed()))
         onView(withId(R.id.image)).check(ViewAssertions.matches(isDisplayed()))
         onView(withId(R.id.description)).check(ViewAssertions.matches(isDisplayed()))
+    }
+
+    @Test
+    fun testSearchOneItem() {
+        mockGames()
+        activityRule.launchActivity(Intent())
+        checkClickInToolbar()
+        checkSearchInToolbar()
+    }
+
+    private fun checkClickInToolbar() {
+        onView(withId(R.id.game_list_searchView)).perform(click())
+    }
+
+    private fun checkSearchInToolbar() {
+        onView(isAssignableFrom(EditText::class.java)).perform(typeText("Game 1"), pressImeActionButton())
+        onView(allOf(instanceOf(TextView::class.java), withParent(withId(R.id.listToolbar)))).check(matches(withText("Search: Game 1")))
     }
 
     private fun mockGames() {
@@ -89,7 +111,7 @@ class GameListFragmentTest {
             val gameList = GameList(getMockGameList())
             emitter.onSuccess(gameList)
         }
-        whenever(mockGameRepository.getGames()).thenReturn(mockSingle)
+        whenever(mockGameRepository.getGames("")).thenReturn(mockSingle)
     }
 
     private fun getMockGameList(): List<EGame> = (1..10).map {

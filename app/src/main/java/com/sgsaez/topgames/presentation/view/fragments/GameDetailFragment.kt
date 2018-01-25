@@ -58,7 +58,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     private fun initToolbar() {
-        toolbar.apply {
+        detailToolbar.apply {
             setNavigationIcon(R.drawable.ic_action_back)
             setNavigationOnClickListener { activity.onBackPressed() }
         }
@@ -74,7 +74,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     override fun addTitleToolbar(name: String) {
-        toolbar.title = name
+        detailToolbar.title = name
     }
 
     override fun addDescription(content: String) {

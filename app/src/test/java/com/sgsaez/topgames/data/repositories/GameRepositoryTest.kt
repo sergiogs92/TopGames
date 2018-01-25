@@ -44,11 +44,9 @@ class GameRepositoryTest {
         val games = GameList(emptyList())
 
         setUpMocks(games, true)
-        val testObserver = gameRepository.getGames().test()
+        val testObserver = gameRepository.getGames("").test()
 
-        testObserver.assertNoErrors()
-        testObserver.assertValue { gamesResult: GameList -> gamesResult.results.isEmpty() }
-        Mockito.verify(mockGameDao).insertAll(games.results)
+        testObserver.assertError(Exception::class.java)
     }
 
     @Test
@@ -56,7 +54,7 @@ class GameRepositoryTest {
         val games = GameList(listOf(EGame("1", "This is the game", "My game", Image("url"))))
 
         setUpMocks(games, true)
-        val testObserver = gameRepository.getGames().test()
+        val testObserver = gameRepository.getGames("").test()
 
         testObserver.assertNoErrors()
         testObserver.assertValue { gamesResult: GameList -> gamesResult.results.size == 1 }

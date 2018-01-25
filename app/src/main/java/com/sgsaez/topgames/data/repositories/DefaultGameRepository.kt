@@ -7,22 +7,20 @@ import com.sgsaez.topgames.data.persistence.entities.GameList
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 
-class DefaultGameRepository(private val gameService: GameService,
-                            private val gameDao: GameDao,
+class DefaultGameRepository(private val gameService: GameService, private val gameDao: GameDao,
                             private val connectivityChecker: ConnectivityChecker) : GameRepository {
 
-    override fun getGames(): Single<GameList> {
-        return Single.create<GameList> { emitter: SingleEmitter<GameList> -> loadGames(emitter) }
+    override fun getGames(query: String): Single<GameList> {
+        return Single.create<GameList> { emitter: SingleEmitter<GameList> -> loadGames(query, emitter) }
     }
 
-    private fun loadGames(emitter: SingleEmitter<GameList>) {
+    private fun loadGames(query: String, emitter: SingleEmitter<GameList>) {
         try {
-            val games = gameService.getGames().execute().body()
-            if (games != null) {
-                gameDao.insertAll(games.results)
-                emitter.onSuccess(games)
-            } else{
-                emitter.onError(Exception("No data received"))
+            if (query.isEmpty()) {
+                val games = gameService.getGames().execute().body()
+                games?.let { saveGamesReceived(it, emitter) }
+            } else {
+                tryLoadOfflineSearch(query, emitter)
             }
         } catch (exception: Exception) {
             when {
@@ -32,12 +30,30 @@ class DefaultGameRepository(private val gameService: GameService,
         }
     }
 
-    private fun tryLoadOfflineGames(emitter: SingleEmitter<GameList>){
+    private fun saveGamesReceived(games: GameList, emitter: SingleEmitter<GameList>) {
+        if (!games.results.isEmpty()) {
+            gameDao.insertAll(games.results)
+            emitter.onSuccess(games)
+        } else {
+            emitter.onError(Exception("No data received"))
+        }
+    }
+
+    private fun tryLoadOfflineGames(emitter: SingleEmitter<GameList>) {
         val games = gameDao.getGames()
-        if(!games.isEmpty()){
+        if (!games.isEmpty()) {
             emitter.onSuccess(GameList(games))
-        }else{
+        } else {
             emitter.onError(Exception("No internet connection"))
+        }
+    }
+
+    private fun tryLoadOfflineSearch(query: String, emitter: SingleEmitter<GameList>) {
+        val games = gameDao.searchGames(query.plus("%"))
+        if (!games.isEmpty()) {
+            emitter.onSuccess(GameList(games))
+        } else {
+            emitter.onError(Exception("No data found"))
         }
     }
 }

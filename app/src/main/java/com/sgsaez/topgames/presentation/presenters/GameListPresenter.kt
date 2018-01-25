@@ -8,8 +8,8 @@ import com.sgsaez.topgames.utils.SchedulerProvider
 class GameListPresenter(private val getGames: GetGames,
                         private val schedulerProvider: SchedulerProvider) : BasePresenter<GameListView>() {
 
-    fun onInit(isRefresh: Boolean = false) {
-        getGames.execute()
+    fun onLoadGames(query: String, isRefresh: Boolean = false) {
+        getGames.execute(query)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe({ games ->
@@ -25,4 +25,9 @@ class GameListPresenter(private val getGames: GetGames,
     fun onGameClicked(game: Game) {
         view?.navigateToGame(game)
     }
+
+    fun onSearchClicked(query: String) {
+        view?.navigateToGameList(query)
+    }
+
 }

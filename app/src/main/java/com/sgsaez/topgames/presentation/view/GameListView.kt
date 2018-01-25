@@ -9,4 +9,5 @@ interface GameListView {
     fun showToastError(message: String?)
     fun clearList()
     fun navigateToGame(game: Game)
+    fun navigateToGameList(query: String)
 }
