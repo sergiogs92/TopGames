@@ -1,12 +1,17 @@
 package com.sgsaez.topgames.presentation.view.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v7.graphics.Palette
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +22,9 @@ import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
 import com.sgsaez.topgames.presentation.view.GameDetailView
 import com.sgsaez.topgames.utils.NotParcelled.fromNotParcelled
 import com.sgsaez.topgames.utils.isLollipopOrAbove
-import com.sgsaez.topgames.utils.loadUrl
 import com.sgsaez.topgames.utils.topGamesApplication
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.description_item.*
 import kotlinx.android.synthetic.main.fragment_game_detail.*
 import java.io.File
@@ -54,7 +60,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
         val game = fromNotParcelled(arguments.getString(GAME_KEY), Game::class.java)
         initFloatingButton(game)
         presenter.attachView(this)
-        presenter.onInit(context.getString(R.string.noDescription), game)
+        presenter.onInit(game)
     }
 
     private fun initToolbar() {
@@ -67,7 +73,6 @@ class GameDetailFragment : Fragment(), GameDetailView {
     private fun initFloatingButton(game: Game) {
         isLollipopOrAbove {
             floatingButton.apply {
-                visibility = View.VISIBLE
                 setOnClickListener { presenter.onSocialSharedClicked(game) }
             }
         }
@@ -82,7 +87,36 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     override fun addImage(url: String) {
-        image.loadUrl(url)
+        Picasso.with(image.context).load(url).into(image, object : Callback {
+            override fun onSuccess() {
+                val bitmap = (image.drawable as BitmapDrawable).bitmap
+                Palette.from(bitmap).generate { palette -> applyPalette(palette) }
+            }
+
+            override fun onError() {}
+        })
+    }
+
+    private fun applyPalette(palette: Palette) {
+        if (activity != null) {
+            val primaryDarkColor = ContextCompat.getColor(activity!!, R.color.colorPrimaryDark)
+            val primaryColor = ContextCompat.getColor(activity!!, R.color.colorPrimary)
+
+            collapsingToolbar.setContentScrimColor(palette.getMutedColor(primaryColor))
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                activity!!.window.statusBarColor = palette.getDarkMutedColor(primaryDarkColor)
+            }
+            updateBackground(palette, primaryColor, primaryDarkColor)
+        }
+    }
+
+    private fun updateBackground(palette: Palette, primaryColor: Int, primaryDarkColor: Int) {
+        val lightVibrantColor = palette.getLightVibrantColor(primaryDarkColor)
+        val vibrantColor = palette.getVibrantColor(primaryColor)
+        floatingButton.rippleColor = lightVibrantColor
+        floatingButton.backgroundTintList = ColorStateList.valueOf(vibrantColor)
+        floatingButton.show()
     }
 
     override fun showSocialSharedNetworks(game: Game) {
@@ -117,8 +151,16 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     override fun onDestroyView() {
+        presenter.onResetStatusBarColor()
         presenter.detachView()
         super.onDestroyView()
+    }
+
+    @SuppressLint("NewApi")
+    override fun resetStatusBarColor() {
+        isLollipopOrAbove {
+            activity.window.statusBarColor = ContextCompat.getColor(context, R.color.colorPrimaryDark)
+        }
     }
 }
 

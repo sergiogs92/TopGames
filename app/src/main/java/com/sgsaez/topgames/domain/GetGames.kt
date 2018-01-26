@@ -11,7 +11,7 @@ class GetGames(private val gameRepository: GameRepository) {
         val games = gameRepository.getGames(query)
         return games.map { gameList: GameList? ->
             val items = gameList?.results ?: emptyList()
-            items.map { Game(it.id, it.description, it.name, it.image) }
+            items.map { Game(it.id, if (it.description.isNullOrBlank()) "No description" else it.description!!, it.name, it.image) }
         }
     }
 }

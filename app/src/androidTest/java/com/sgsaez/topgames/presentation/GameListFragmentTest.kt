@@ -116,6 +116,7 @@ class GameListFragmentTest {
 
     private fun getMockGameList(): List<EGame> = (1..10).map {
         val number = +it
-        EGame(it.toString(), "This is the game $number", "Game $number", Image(""))
+        val url = "goo.gl/svPzkf"
+        EGame(it.toString(), "This is the game $number", "Game $number", Image(url))
     }
 }

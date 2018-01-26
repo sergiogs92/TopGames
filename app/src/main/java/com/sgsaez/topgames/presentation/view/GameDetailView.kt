@@ -7,4 +7,5 @@ interface GameDetailView {
     fun addDescription(content: String)
     fun addImage(url: String)
     fun showSocialSharedNetworks(game: Game)
+    fun resetStatusBarColor()
 }

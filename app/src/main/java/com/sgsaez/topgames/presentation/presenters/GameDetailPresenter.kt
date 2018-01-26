@@ -6,15 +6,19 @@ import com.sgsaez.topgames.utils.fromHtml
 
 class GameDetailPresenter : BasePresenter<GameDetailView>() {
 
-    fun onInit(noDescription: String, game: Game) {
+    fun onInit(game: Game) {
         view?.addTitleToolbar(game.name)
-        view?.addDescription(convertFromHtml(noDescription, game.description))
+        view?.addDescription(convertFromHtml(game.description))
         view?.addImage(game.image.url)
     }
 
-    private fun convertFromHtml(noDescription: String, description: String?) = description?.fromHtml()?.toString() ?: noDescription
+    private fun convertFromHtml(description: String) = description.fromHtml().toString()
 
     fun onSocialSharedClicked(game: Game) {
         view?.showSocialSharedNetworks(game)
+    }
+
+    fun onResetStatusBarColor() {
+        view?.resetStatusBarColor()
     }
 }
