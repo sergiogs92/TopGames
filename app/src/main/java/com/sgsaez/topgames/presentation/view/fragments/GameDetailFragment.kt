@@ -6,7 +6,6 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
@@ -97,14 +96,13 @@ class GameDetailFragment : Fragment(), GameDetailView {
         })
     }
 
+    @SuppressLint("NewApi")
     private fun applyPalette(palette: Palette) {
         if (activity != null) {
             val primaryDarkColor = ContextCompat.getColor(activity!!, R.color.colorPrimaryDark)
             val primaryColor = ContextCompat.getColor(activity!!, R.color.colorPrimary)
-
             collapsingToolbar.setContentScrimColor(palette.getMutedColor(primaryColor))
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            isLollipopOrAbove {
                 activity!!.window.statusBarColor = palette.getDarkMutedColor(primaryDarkColor)
             }
             updateBackground(palette, primaryColor, primaryDarkColor)
