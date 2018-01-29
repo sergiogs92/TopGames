@@ -1,5 +1,6 @@
 package com.sgsaez.topgames.presentation.view.fragments
 
+import android.content.res.Configuration
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -60,6 +61,11 @@ class GameListFragment : Fragment(), GameListView {
             showLoading()
             presenter.onLoadGames(query, true)
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        initAdapter()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

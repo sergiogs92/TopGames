@@ -3,6 +3,7 @@ package com.sgsaez.topgames.presentation.view.fragments
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -60,6 +61,13 @@ class GameDetailFragment : Fragment(), GameDetailView {
         initFloatingButton(game)
         presenter.attachView(this)
         presenter.onInit(game)
+    }
+    
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        appBarLayout.layoutParams.apply {
+            height = resources.displayMetrics.heightPixels / 2
+        }
     }
 
     private fun initToolbar() {
