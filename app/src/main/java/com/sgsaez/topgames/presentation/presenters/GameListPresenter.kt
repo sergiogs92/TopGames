@@ -1,6 +1,8 @@
 package com.sgsaez.topgames.presentation.presenters
 
-import com.sgsaez.topgames.domain.GetGames
+import com.sgsaez.topgames.domain.ErrorConstants
+import com.sgsaez.topgames.domain.game.GamesException
+import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.utils.SchedulerProvider
@@ -17,9 +19,18 @@ class GameListPresenter(private val getGames: GetGames,
                     view?.addGameToList(games)
                     view?.hideLoading()
                 }, {
-                    view?.hideLoading()
-                    view?.showToastError(it.message)
+                    val gamesException = it as GamesException
+                    when (gamesException.tag) {
+                        ErrorConstants.ERROR_NO_DATA_FOUND -> showError(ErrorConstants.ERROR_NO_DATA_FOUND)
+                        ErrorConstants.ERROR_INTERNET_CONNECTION -> showError(ErrorConstants.ERROR_INTERNET_CONNECTION)
+                        else -> showError(ErrorConstants.DEFAULT)
+                    }
                 })
+    }
+
+    private fun showError(tag: ErrorConstants) {
+        view?.hideLoading()
+        view?.showToastError(tag)
     }
 
     fun onGameClicked(game: Game) {

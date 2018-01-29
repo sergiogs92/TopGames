@@ -3,6 +3,7 @@ package com.sgsaez.topgames.domain
 import com.sgsaez.topgames.data.persistence.entities.EGame
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.repositories.GameRepository
+import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.model.Image
 import io.reactivex.Single

@@ -1,6 +1,8 @@
 package com.sgsaez.topgames.presentation
 
-import com.sgsaez.topgames.domain.GetGames
+import com.sgsaez.topgames.domain.ErrorConstants
+import com.sgsaez.topgames.domain.game.GamesException
+import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.model.Image
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
@@ -37,9 +39,8 @@ class GameListPresenterTest {
 
     @Test
     fun testGetGamesErrorCaseShowError() {
-        val error = "Test error"
         val single: Single<List<Game>> = Single.create { emitter ->
-            emitter.onError(Exception(error))
+            emitter.onError(GamesException(ErrorConstants.DEFAULT))
         }
 
         `when`(mockGetGames.execute("")).thenReturn(single)

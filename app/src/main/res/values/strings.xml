@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">TopGames</string>
-    <string name="errorLoadingMessage">Error loading data</string>
     <string name="noDescription">No description</string>
     <string name="default_image_name">image_shared.png</string>
     <string name="search">Search</string>
     <string name="search_game">Search game</string>
     <string name="search_title">Search: %s</string>
+    <string name="error_loading_message">Error loading data</string>
+    <string name="error_no_data_found">No data found</string>
+    <string name="error_internet_connection">No internet connection</string>
+    <string name="error_default">No connection to server. Try again later</string>
 </resources>

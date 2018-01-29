@@ -5,6 +5,7 @@ import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
 import com.sgsaez.topgames.data.persistence.daos.GameDao
 import com.sgsaez.topgames.data.persistence.entities.EGame
 import com.sgsaez.topgames.data.persistence.entities.GameList
+import com.sgsaez.topgames.domain.game.GamesException
 import com.sgsaez.topgames.presentation.model.Image
 import org.junit.Before
 import org.junit.Test
@@ -46,7 +47,7 @@ class GameRepositoryTest {
         setUpMocks(games, true)
         val testObserver = gameRepository.getGames("").test()
 
-        testObserver.assertError(Exception::class.java)
+        testObserver.assertError(GamesException::class.java)
     }
 
     @Test

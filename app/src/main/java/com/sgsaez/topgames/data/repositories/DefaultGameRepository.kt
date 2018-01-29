@@ -4,6 +4,8 @@ import com.sgsaez.topgames.data.network.GameService
 import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
 import com.sgsaez.topgames.data.persistence.daos.GameDao
 import com.sgsaez.topgames.data.persistence.entities.GameList
+import com.sgsaez.topgames.domain.ErrorConstants
+import com.sgsaez.topgames.domain.game.GamesException
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 
@@ -25,7 +27,7 @@ class DefaultGameRepository(private val gameService: GameService, private val ga
         } catch (exception: Exception) {
             when {
                 !connectivityChecker.isOnline() -> tryLoadOfflineGames(emitter)
-                else -> emitter.onError(exception)
+                else -> emitter.onError(GamesException(ErrorConstants.DEFAULT))
             }
         }
     }
@@ -35,7 +37,7 @@ class DefaultGameRepository(private val gameService: GameService, private val ga
             gameDao.insertAll(games.results)
             emitter.onSuccess(games)
         } else {
-            emitter.onError(Exception("No data received"))
+            emitter.onError(GamesException(ErrorConstants.ERROR_NO_DATA_RECEIVED))
         }
     }
 
@@ -44,7 +46,7 @@ class DefaultGameRepository(private val gameService: GameService, private val ga
         if (!games.isEmpty()) {
             emitter.onSuccess(GameList(games))
         } else {
-            emitter.onError(Exception("No internet connection"))
+            emitter.onError(GamesException(ErrorConstants.ERROR_INTERNET_CONNECTION))
         }
     }
 
@@ -53,7 +55,7 @@ class DefaultGameRepository(private val gameService: GameService, private val ga
         if (!games.isEmpty()) {
             emitter.onSuccess(GameList(games))
         } else {
-            emitter.onError(Exception("No data found"))
+            emitter.onError(GamesException(ErrorConstants.ERROR_NO_DATA_FOUND))
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.domain
+package com.sgsaez.topgames.domain.game
 
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.repositories.GameRepository
