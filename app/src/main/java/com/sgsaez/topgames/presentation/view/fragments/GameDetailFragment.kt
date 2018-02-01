@@ -20,7 +20,6 @@ import com.sgsaez.topgames.di.modules.GameDetailFragmentModule
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
 import com.sgsaez.topgames.presentation.view.GameDetailView
-import com.sgsaez.topgames.utils.NotParcelled.fromNotParcelled
 import com.sgsaez.topgames.utils.isLollipopOrAbove
 import com.sgsaez.topgames.utils.topGamesApplication
 import com.squareup.picasso.Callback
@@ -41,10 +40,10 @@ class GameDetailFragment : Fragment(), GameDetailView {
 
     companion object {
         private const val GAME_KEY: String = "GAME_KEY"
-        fun newInstance(game: String): GameDetailFragment {
+        fun newInstance(game: GameViewModel): GameDetailFragment {
             val fragment = GameDetailFragment()
             val args = Bundle()
-            args.putString(GAME_KEY, game)
+            args.putParcelable(GAME_KEY, game)
             fragment.arguments = args
             return fragment
         }
@@ -57,12 +56,12 @@ class GameDetailFragment : Fragment(), GameDetailView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
-        val game = fromNotParcelled(arguments.getString(GAME_KEY), GameViewModel::class.java)
+        val game = arguments.getParcelable<GameViewModel>(GAME_KEY)
         initFloatingButton(game)
         presenter.attachView(this)
         presenter.onInit(game)
     }
-    
+
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         appBarLayout.layoutParams.apply {

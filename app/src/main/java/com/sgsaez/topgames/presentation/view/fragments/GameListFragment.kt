@@ -17,7 +17,6 @@ import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.presentation.view.adapters.GameListAdapter
-import com.sgsaez.topgames.utils.NotParcelled.toNotParcelled
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_game_list.*
 
@@ -163,7 +162,7 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     override fun navigateToGame(game: GameViewModel) {
-        val detailsFragment = GameDetailFragment.newInstance(toNotParcelled(game))
+        val detailsFragment = GameDetailFragment.newInstance(game)
         (activity as MainActivity).addFragment(detailsFragment)
     }
 
