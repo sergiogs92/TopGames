@@ -2,8 +2,8 @@ package com.sgsaez.topgames.presentation
 
 import android.text.Html
 import android.text.SpannableStringBuilder
-import com.sgsaez.topgames.presentation.model.Game
-import com.sgsaez.topgames.presentation.model.Image
+import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
 import com.sgsaez.topgames.presentation.view.GameDetailView
 import org.junit.Before
@@ -34,14 +34,14 @@ class GameDetailPresenterTest {
 
     @Test
     fun testGetGameDetailCorrectCaseShowNoDescription() {
-        val game = Game("1", "No description", "My game", Image("url"))
+        val game = GameViewModel("1", "No description", "My game", "url")
 
         (Mockito.`when`(Html.fromHtml(game.description))).thenReturn(SpannableStringBuilder("No description"))
         gameDetailPresenter.attachView(mockView)
         gameDetailPresenter.onInit(game)
 
         Mockito.verify(mockView).addTitleToolbar(game.name)
-        Mockito.verify(mockView).addImage(game.image.url)
+        Mockito.verify(mockView).addImage(game.imageUrl)
     }
 }
 

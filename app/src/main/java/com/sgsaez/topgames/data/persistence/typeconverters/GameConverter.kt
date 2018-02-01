@@ -1,7 +1,7 @@
 package com.sgsaez.topgames.data.persistence.typeconverters
 
 import android.arch.persistence.room.TypeConverter
-import com.sgsaez.topgames.presentation.model.Image
+import com.sgsaez.topgames.data.persistence.entities.Image
 
 class GameConverter {
 

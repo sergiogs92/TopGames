@@ -1,11 +1,11 @@
 package com.sgsaez.topgames.domain
 
-import com.sgsaez.topgames.data.persistence.entities.EGame
+import com.sgsaez.topgames.data.persistence.entities.Game
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.repositories.GameRepository
 import com.sgsaez.topgames.domain.game.GetGames
-import com.sgsaez.topgames.presentation.model.Game
-import com.sgsaez.topgames.presentation.model.Image
+import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.data.persistence.entities.Image
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import org.junit.Before
@@ -29,16 +29,16 @@ class GetGamesTest {
 
     @Test
     fun testGameListWithOneItemEmitListWithOneGame() {
-        val mockSingle = Single.create { e: SingleEmitter<GameList>? -> e?.onSuccess(GameList(listOf(EGame("1", "This is the game", "My game", Image("url"))))) }
+        val mockSingle = Single.create { e: SingleEmitter<GameList>? -> e?.onSuccess(GameList(listOf(Game("1", "This is the game", "My game", Image("url"))))) }
 
         `when`(mockGameRepository.getGames("")).thenReturn(mockSingle)
 
         val resultSingle = getGames.execute("")
         val testObserver = resultSingle.test()
         testObserver.assertNoErrors()
-        testObserver.assertValue { games: List<Game> -> games.size == 1 }
-        testObserver.assertValue { games: List<Game> ->
-            games[0] == Game("1", "This is the game", "My game", Image("url"))
+        testObserver.assertValue { games: List<GameViewModel> -> games.size == 1 }
+        testObserver.assertValue { games: List<GameViewModel> ->
+            games[0] == GameViewModel("1", "This is the game", "My game", "url")
         }
     }
 
@@ -51,6 +51,6 @@ class GetGamesTest {
         val resultSingle = getGames.execute("")
         val testObserver = resultSingle.test()
         testObserver.assertNoErrors()
-        testObserver.assertValue { userViewModels: List<Game> -> userViewModels.isEmpty() }
+        testObserver.assertValue { userViewModels: List<GameViewModel> -> userViewModels.isEmpty() }
     }
 }

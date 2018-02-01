@@ -1,3 +1,3 @@
 package com.sgsaez.topgames.data.persistence.entities
 
-data class GameList(val results: List<EGame>)
+data class GameList(val results: List<Game>)

@@ -1,7 +1,7 @@
 package com.sgsaez.topgames.data.persistence
 
 import com.sgsaez.topgames.data.persistence.typeconverters.GameConverter
-import com.sgsaez.topgames.presentation.model.Image
+import com.sgsaez.topgames.data.persistence.entities.Image
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

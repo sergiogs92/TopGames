@@ -12,7 +12,7 @@ import android.widget.Toast
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.di.modules.GameListFragmentModule
 import com.sgsaez.topgames.domain.ErrorConstants
-import com.sgsaez.topgames.presentation.model.Game
+import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
@@ -27,7 +27,7 @@ class GameListFragment : Fragment(), GameListView {
     private val component by lazy { topGamesApplication.component.plus(GameListFragmentModule()) }
     private var query: String = ""
     private val gameListAdapter by lazy {
-        val gameList = mutableListOf<Game>()
+        val gameList = mutableListOf<GameViewModel>()
         GameListAdapter(gameList) { game, _ -> presenter.onGameClicked(game) }
     }
 
@@ -144,7 +144,7 @@ class GameListFragment : Fragment(), GameListView {
         swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun addGameToList(games: List<Game>) {
+    override fun addGameToList(games: List<GameViewModel>) {
         val adapter = recyclerView.adapter as GameListAdapter
         adapter.addGames(games)
     }
@@ -162,7 +162,7 @@ class GameListFragment : Fragment(), GameListView {
         gameListAdapter.clearGames()
     }
 
-    override fun navigateToGame(game: Game) {
+    override fun navigateToGame(game: GameViewModel) {
         val detailsFragment = GameDetailFragment.newInstance(toNotParcelled(game))
         (activity as MainActivity).addFragment(detailsFragment)
     }

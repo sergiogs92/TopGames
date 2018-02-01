@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.presentation.model
+package com.sgsaez.topgames.data.persistence.entities
 
 import com.google.gson.annotations.SerializedName
 

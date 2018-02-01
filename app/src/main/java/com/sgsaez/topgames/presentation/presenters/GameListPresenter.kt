@@ -3,7 +3,7 @@ package com.sgsaez.topgames.presentation.presenters
 import com.sgsaez.topgames.domain.ErrorConstants
 import com.sgsaez.topgames.domain.game.GamesException
 import com.sgsaez.topgames.domain.game.GetGames
-import com.sgsaez.topgames.presentation.model.Game
+import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.utils.SchedulerProvider
 
@@ -33,7 +33,7 @@ class GameListPresenter(private val getGames: GetGames,
         view?.showToastError(tag)
     }
 
-    fun onGameClicked(game: Game) {
+    fun onGameClicked(game: GameViewModel) {
         view?.navigateToGame(game)
     }
 

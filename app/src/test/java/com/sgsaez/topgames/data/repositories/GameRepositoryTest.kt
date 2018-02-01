@@ -3,10 +3,10 @@ package com.sgsaez.topgames.data.repositories
 import com.sgsaez.topgames.data.network.GameService
 import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
 import com.sgsaez.topgames.data.persistence.daos.GameDao
-import com.sgsaez.topgames.data.persistence.entities.EGame
+import com.sgsaez.topgames.data.persistence.entities.Game
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.domain.game.GamesException
-import com.sgsaez.topgames.presentation.model.Image
+import com.sgsaez.topgames.data.persistence.entities.Image
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -52,7 +52,7 @@ class GameRepositoryTest {
 
     @Test
     fun testGetGamesIsOnlineReceivedListAndEmitList() {
-        val games = GameList(listOf(EGame("1", "This is the game", "My game", Image("url"))))
+        val games = GameList(listOf(Game("1", "This is the game", "My game", Image("url"))))
 
         setUpMocks(games, true)
         val testObserver = gameRepository.getGames("").test()

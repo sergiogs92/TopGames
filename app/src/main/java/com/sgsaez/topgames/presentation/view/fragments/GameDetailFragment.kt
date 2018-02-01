@@ -17,7 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.di.modules.GameDetailFragmentModule
-import com.sgsaez.topgames.presentation.model.Game
+import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
 import com.sgsaez.topgames.presentation.view.GameDetailView
 import com.sgsaez.topgames.utils.NotParcelled.fromNotParcelled
@@ -57,7 +57,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
-        val game = fromNotParcelled(arguments.getString(GAME_KEY), Game::class.java)
+        val game = fromNotParcelled(arguments.getString(GAME_KEY), GameViewModel::class.java)
         initFloatingButton(game)
         presenter.attachView(this)
         presenter.onInit(game)
@@ -77,7 +77,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
         }
     }
 
-    private fun initFloatingButton(game: Game) {
+    private fun initFloatingButton(game: GameViewModel) {
         isLollipopOrAbove {
             floatingButton.apply {
                 setOnClickListener { presenter.onSocialSharedClicked(game) }
@@ -125,7 +125,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
         floatingButton.show()
     }
 
-    override fun showSocialSharedNetworks(game: Game) {
+    override fun showSocialSharedNetworks(game: GameViewModel) {
         val textShared = game.name
         val bmpUri = getLocalBitmapUri()
         val shareIntent = Intent()
