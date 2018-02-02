@@ -11,10 +11,12 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.support.v7.graphics.Palette
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.sgsaez.topgames.BuildConfig
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.di.modules.GameDetailFragmentModule
 import com.sgsaez.topgames.presentation.model.GameViewModel
@@ -29,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_game_detail.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+
 
 class GameDetailFragment : Fragment(), GameDetailView {
 
@@ -149,7 +152,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
             val out = FileOutputStream(file)
             bmp!!.compress(Bitmap.CompressFormat.JPEG, 100, out)
             out.close()
-            return Uri.fromFile(file)
+            return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
         } catch (ignored: IOException) {
         }
         return null
