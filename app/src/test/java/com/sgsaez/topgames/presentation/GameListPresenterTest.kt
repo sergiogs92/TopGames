@@ -1,10 +1,9 @@
 package com.sgsaez.topgames.presentation
 
-import com.sgsaez.topgames.domain.ErrorConstants
 import com.sgsaez.topgames.domain.game.GamesException
+import com.sgsaez.topgames.domain.game.GamesException.Companion.DEFAULT
 import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.GameViewModel
-import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.utils.SchedulerProviderTest
@@ -40,7 +39,7 @@ class GameListPresenterTest {
     @Test
     fun testGetGamesErrorCaseShowError() {
         val single: Single<List<GameViewModel>> = Single.create { emitter ->
-            emitter.onError(GamesException(ErrorConstants.DEFAULT))
+            emitter.onError(GamesException(DEFAULT))
         }
 
         `when`(mockGetGames.execute("")).thenReturn(single)
@@ -54,8 +53,7 @@ class GameListPresenterTest {
     @Test
     fun testGetGamesCorrectCaseShowGame() {
         val games = listOf(GameViewModel("1", "This is the game", "My game", "url"))
-        val single: Single<List<GameViewModel>> = Single.create {
-            emitter ->
+        val single: Single<List<GameViewModel>> = Single.create { emitter ->
             emitter.onSuccess(games)
         }
 

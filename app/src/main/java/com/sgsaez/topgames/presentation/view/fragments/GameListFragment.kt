@@ -11,7 +11,6 @@ import android.view.*
 import android.widget.Toast
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.di.modules.GameListFragmentModule
-import com.sgsaez.topgames.domain.ErrorConstants
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
@@ -148,13 +147,16 @@ class GameListFragment : Fragment(), GameListView {
         adapter.addGames(games)
     }
 
-    override fun showToastError(tag: ErrorConstants) {
-        val errorMessage = when (tag) {
-            ErrorConstants.ERROR_NO_DATA_FOUND -> resources.getString(R.string.error_no_data_found)
-            ErrorConstants.ERROR_INTERNET_CONNECTION -> resources.getString(R.string.error_internet_connection)
-            else -> resources.getString(R.string.error_default)
-        }
-        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+    override fun showNoDataFoundError() {
+        Toast.makeText(context, resources.getString(R.string.error_no_data_found), Toast.LENGTH_LONG).show()
+    }
+
+    override fun showInternetConnectionError() {
+        Toast.makeText(context, resources.getString(R.string.error_internet_connection), Toast.LENGTH_LONG).show()
+    }
+
+    override fun showDefaultError() {
+        Toast.makeText(context, resources.getString(R.string.error_default), Toast.LENGTH_LONG).show()
     }
 
     override fun clearList() {
@@ -175,5 +177,4 @@ class GameListFragment : Fragment(), GameListView {
         presenter.detachView()
         super.onDestroyView()
     }
-
 }
