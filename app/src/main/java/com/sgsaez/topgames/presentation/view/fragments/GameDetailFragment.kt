@@ -30,18 +30,15 @@ import kotlinx.android.synthetic.main.description_item.*
 import kotlinx.android.synthetic.main.fragment_game_detail.*
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
-
 
 class GameDetailFragment : Fragment(), GameDetailView {
-
-    private val TYPE_TEXT = "text/plain"
-    private val TYPE_IMAGE = "image/*"
 
     private val presenter: GameDetailPresenter by lazy { component.presenter() }
     private val component by lazy { topGamesApplication.component.plus(GameDetailFragmentModule()) }
 
     companion object {
+        private const val TYPE_TEXT = "text/plain"
+        private const val TYPE_IMAGE = "image/*"
         private const val GAME_KEY: String = "GAME_KEY"
         fun newInstance(game: GameViewModel): GameDetailFragment {
             val fragment = GameDetailFragment()
@@ -144,18 +141,12 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     private fun getLocalBitmapUri(): Uri? {
-        val drawable = image.drawable
-        val bmp: Bitmap?
-        if (drawable is BitmapDrawable) bmp = (image.drawable as BitmapDrawable).bitmap else return null
-        try {
-            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), context.getString(R.string.default_image_name))
-            val out = FileOutputStream(file)
-            bmp!!.compress(Bitmap.CompressFormat.JPEG, 100, out)
-            out.close()
-            return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
-        } catch (ignored: IOException) {
+        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), context.getString(R.string.default_image_name))
+        FileOutputStream(file).use {
+            val bmp = (image.drawable as BitmapDrawable).bitmap
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, it)
         }
-        return null
+        return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
     }
 
     override fun onDestroyView() {
