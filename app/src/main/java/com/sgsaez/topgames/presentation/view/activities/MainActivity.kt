@@ -8,6 +8,10 @@ import com.sgsaez.topgames.presentation.view.fragments.GameListFragment
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val FIRST_FRAGMENT: Int = 1
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -21,5 +25,10 @@ class MainActivity : AppCompatActivity() {
                 .replace(R.id.fragmentContainer, fragment)
                 .addToBackStack("")
                 .commit()
+    }
+
+    override fun onBackPressed() {
+        val fragments = supportFragmentManager.backStackEntryCount
+        if (fragments == FIRST_FRAGMENT) finish() else super.onBackPressed()
     }
 }
