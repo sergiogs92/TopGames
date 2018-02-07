@@ -65,5 +65,4 @@ class GameListPresenterTest {
         Mockito.verify(mockView).addGameToList(games)
         Mockito.verify(mockView).hideLoading()
     }
-
 }

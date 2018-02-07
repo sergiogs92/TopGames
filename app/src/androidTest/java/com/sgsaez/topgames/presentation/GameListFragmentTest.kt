@@ -7,6 +7,7 @@ import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
+import android.support.test.espresso.matcher.RootMatchers.withDecorView
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -20,6 +21,7 @@ import com.sgsaez.topgames.TopGamesApplication
 import com.sgsaez.topgames.data.persistence.entities.Game
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.persistence.entities.Image
+import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.di.components.DaggerTopGamesApplicationComponentMock
 import com.sgsaez.topgames.di.modules.TopGamesApplicationModuleMock
@@ -27,8 +29,7 @@ import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.utils.RecyclerViewMatcher
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.instanceOf
+import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -43,6 +44,8 @@ class GameListFragmentTest {
 
     lateinit var mockGameRepository: GameRepository
 
+    lateinit var mockFavouriteRepository: FavouriteRepository
+
     private fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher {
         return RecyclerViewMatcher(recyclerViewId)
     }
@@ -50,6 +53,7 @@ class GameListFragmentTest {
     @Before
     fun setUp() {
         mockGameRepository = mock()
+        mockFavouriteRepository = mock()
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val app = instrumentation.targetContext.applicationContext as TopGamesApplication
         val testComponent = DaggerTopGamesApplicationComponentMock.builder()
@@ -93,17 +97,34 @@ class GameListFragmentTest {
     fun testSearchOneItem() {
         mockGames()
         activityRule.launchActivity(Intent())
-        checkClickInToolbar()
-        checkSearchInToolbar()
+        checkClickInSearchView()
+        checkSearch()
     }
 
-    private fun checkClickInToolbar() {
+    private fun checkClickInSearchView() {
         onView(withId(R.id.game_list_searchView)).perform(click())
     }
 
-    private fun checkSearchInToolbar() {
+    private fun checkSearch() {
         onView(isAssignableFrom(EditText::class.java)).perform(typeText("Game 1"), pressImeActionButton())
         onView(allOf(instanceOf(TextView::class.java), withParent(withId(R.id.listToolbar)))).check(matches(withText("Search: Game 1")))
+    }
+
+    @Test
+    fun testAddFavouriteOneItem() {
+        mockGames()
+        activityRule.launchActivity(Intent())
+        checkClickOnPosition(0)
+        checkClickInFavourite()
+        checkSavedFavourite()
+    }
+
+    private fun checkClickInFavourite() {
+        onView(withId(R.id.game_detail_favourite)).perform(click())
+    }
+
+    private fun checkSavedFavourite() {
+        onView(withText(R.string.saved_game)).inRoot(withDecorView(not(activityRule.activity.window.decorView))).check(matches(isDisplayed()))
     }
 
     private fun mockGames() {

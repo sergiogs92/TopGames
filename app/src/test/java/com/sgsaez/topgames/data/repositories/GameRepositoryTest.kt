@@ -20,7 +20,7 @@ import retrofit2.Response
 class GameRepositoryTest {
 
     @Mock
-    lateinit var mockGameService: ApiService
+    lateinit var mockApiService: ApiService
 
     @Mock
     lateinit var mockGameDao: GameDao
@@ -39,7 +39,7 @@ class GameRepositoryTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        gameRepository = DefaultGameRepository(mockGameService, mockGameDao, mockConnectivityChecker)
+        gameRepository = DefaultGameRepository(mockApiService, mockGameDao, mockConnectivityChecker)
     }
 
     @Test
@@ -49,7 +49,7 @@ class GameRepositoryTest {
         setUpMocks(games, true)
         val testObserver = gameRepository.getGames("").test()
 
-        testObserver.assertError(GamesException::class.java)
+        testObserver.assertError(GamesException(GamesException.ERROR_NO_DATA_RECEIVED))
     }
 
     @Test
@@ -66,7 +66,7 @@ class GameRepositoryTest {
 
     private fun setUpMocks(modelFromUserService: GameList, isOnline: Boolean) {
         Mockito.`when`(mockConnectivityChecker.isOnline()).thenReturn(isOnline)
-        Mockito.`when`(mockGameService.getGames()).thenReturn(mockGameCall)
+        Mockito.`when`(mockApiService.getGames()).thenReturn(mockGameCall)
         Mockito.`when`(mockGameCall.execute()).thenReturn(mockGameResponse)
         Mockito.`when`(mockGameResponse.body()).thenReturn(modelFromUserService)
         Mockito.`when`(mockGameDao.getGames()).thenReturn(emptyList())
