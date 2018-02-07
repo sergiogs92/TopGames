@@ -12,4 +12,5 @@ interface GameListView {
     fun clearList()
     fun navigateToGame(game: GameViewModel)
     fun navigateToGameList(query: String)
+    fun navigateToFavourites()
 }

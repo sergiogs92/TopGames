@@ -1,6 +1,6 @@
-package com.sgsaez.topgames.data.repositories
+package com.sgsaez.topgames.data.repositories.game
 
-import com.sgsaez.topgames.data.network.GameService
+import com.sgsaez.topgames.data.network.ApiService
 import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
 import com.sgsaez.topgames.data.persistence.daos.GameDao
 import com.sgsaez.topgames.data.persistence.entities.GameList
@@ -12,7 +12,7 @@ import com.sgsaez.topgames.domain.game.GamesException.Companion.ERROR_NO_DATA_RE
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 
-class DefaultGameRepository(private val gameService: GameService, private val gameDao: GameDao,
+class DefaultGameRepository(private val gameService: ApiService, private val gameDao: GameDao,
                             private val connectivityChecker: ConnectivityChecker) : GameRepository {
 
     override fun getGames(query: String): Single<GameList> {

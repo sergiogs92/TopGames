@@ -3,6 +3,7 @@ package com.sgsaez.topgames.data.repositories
 import com.sgsaez.topgames.data.persistence.entities.Game
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.persistence.entities.Image
+import com.sgsaez.topgames.data.repositories.game.GameRepository
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 

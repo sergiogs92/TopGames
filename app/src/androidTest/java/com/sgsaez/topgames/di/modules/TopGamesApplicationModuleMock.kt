@@ -2,7 +2,7 @@ package com.sgsaez.topgames.di.modules
 
 import android.content.Context
 import com.sgsaez.topgames.data.repositories.DefaultGameRepositoryMock
-import com.sgsaez.topgames.data.repositories.GameRepository
+import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.utils.AppSchedulerProvider
 import com.sgsaez.topgames.utils.SchedulerProvider
 import dagger.Module

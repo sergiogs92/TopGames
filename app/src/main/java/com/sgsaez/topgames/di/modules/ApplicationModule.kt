@@ -4,12 +4,14 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import com.google.gson.Gson
 import com.sgsaez.topgames.TopGamesApplication
-import com.sgsaez.topgames.data.network.GameService
+import com.sgsaez.topgames.data.network.ApiService
 import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
 import com.sgsaez.topgames.data.network.connectivity.DeviceConnectivity
 import com.sgsaez.topgames.data.persistence.TopGamesDatabase
-import com.sgsaez.topgames.data.repositories.DefaultGameRepository
-import com.sgsaez.topgames.data.repositories.GameRepository
+import com.sgsaez.topgames.data.repositories.favourite.DefaultFavouriteRepository
+import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
+import com.sgsaez.topgames.data.repositories.game.DefaultGameRepository
+import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.utils.AppSchedulerProvider
 import com.sgsaez.topgames.utils.SchedulerProvider
 import dagger.Module
@@ -41,9 +43,15 @@ class ApplicationModule(val application: TopGamesApplication) {
     @Singleton
     fun provideGameRepository(retrofit: Retrofit, database: TopGamesDatabase, connectivityChecker: ConnectivityChecker): GameRepository {
         return DefaultGameRepository(
-                retrofit.create(GameService::class.java),
+                retrofit.create(ApiService::class.java),
                 database.gameDao(),
                 connectivityChecker)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavouriteRepository(database: TopGamesDatabase): FavouriteRepository {
+        return DefaultFavouriteRepository(database.favouriteDao())
     }
 
     @Provides

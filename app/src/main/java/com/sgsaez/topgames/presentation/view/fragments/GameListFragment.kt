@@ -25,18 +25,21 @@ class GameListFragment : Fragment(), GameListView {
     private val component by lazy { topGamesApplication.component.plus(GameListFragmentModule()) }
     private var query: String = ""
     private val gameListAdapter by lazy {
-        val gameList = mutableListOf<GameViewModel>()
-        GameListAdapter(gameList) { game, _ -> presenter.onGameClicked(game) }
+        GameListAdapter(mutableListOf(), object : GameListAdapter.GameListener {
+            override fun onClickInGame(game: GameViewModel) {
+                presenter.onGameClicked(game)
+            }
+        })
     }
 
     companion object {
         private const val QUERY_KEY: String = "QUERY_KEY"
         fun newInstance(query: String): GameListFragment {
-            val fragment = GameListFragment()
-            val args = Bundle()
-            args.putString(QUERY_KEY, query)
-            fragment.arguments = args
-            return fragment
+            return GameListFragment().apply {
+                val args = Bundle()
+                args.putString(QUERY_KEY, query)
+                arguments = args
+            }
         }
     }
 
@@ -75,11 +78,13 @@ class GameListFragment : Fragment(), GameListView {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item!!.itemId == android.R.id.home) {
-            fragmentManager.popBackStack();
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> fragmentManager.popBackStack();
+            R.id.game_list_source_setting -> presenter.onFavouritesClicked()
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     private fun initToolbar() {
@@ -148,15 +153,15 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     override fun showNoDataFoundError() {
-        Toast.makeText(context, resources.getString(R.string.error_no_data_found), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, resources.getString(R.string.error_no_data_found), Toast.LENGTH_SHORT).show()
     }
 
     override fun showInternetConnectionError() {
-        Toast.makeText(context, resources.getString(R.string.error_internet_connection), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, resources.getString(R.string.error_internet_connection), Toast.LENGTH_SHORT).show()
     }
 
     override fun showDefaultError() {
-        Toast.makeText(context, resources.getString(R.string.error_default), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, resources.getString(R.string.error_default), Toast.LENGTH_SHORT).show()
     }
 
     override fun clearList() {
@@ -164,13 +169,18 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     override fun navigateToGame(game: GameViewModel) {
-        val detailsFragment = GameDetailFragment.newInstance(game)
+        val detailsFragment = GameDetailFragment.newInstance(game, false)
         (activity as MainActivity).addFragment(detailsFragment)
     }
 
     override fun navigateToGameList(query: String) {
-        val listFragment = GameListFragment.newInstance(query)
-        (activity as MainActivity).addFragment(listFragment)
+        val gameListFragment = GameListFragment.newInstance(query)
+        (activity as MainActivity).addFragment(gameListFragment)
+    }
+
+    override fun navigateToFavourites() {
+        val favouriteListFragment = FavouriteListFragment.newInstance()
+        (activity as MainActivity).addFragment(favouriteListFragment)
     }
 
     override fun onDestroyView() {

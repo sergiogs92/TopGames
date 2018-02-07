@@ -19,10 +19,10 @@ import com.sgsaez.topgames.R
 import com.sgsaez.topgames.TopGamesApplication
 import com.sgsaez.topgames.data.persistence.entities.Game
 import com.sgsaez.topgames.data.persistence.entities.GameList
-import com.sgsaez.topgames.data.repositories.GameRepository
+import com.sgsaez.topgames.data.persistence.entities.Image
+import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.di.components.DaggerTopGamesApplicationComponentMock
 import com.sgsaez.topgames.di.modules.TopGamesApplicationModuleMock
-import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.utils.RecyclerViewMatcher
 import io.reactivex.Single

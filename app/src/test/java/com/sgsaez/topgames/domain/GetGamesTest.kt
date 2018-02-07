@@ -2,10 +2,10 @@ package com.sgsaez.topgames.domain
 
 import com.sgsaez.topgames.data.persistence.entities.Game
 import com.sgsaez.topgames.data.persistence.entities.GameList
-import com.sgsaez.topgames.data.repositories.GameRepository
+import com.sgsaez.topgames.data.persistence.entities.Image
+import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.GameViewModel
-import com.sgsaez.topgames.data.persistence.entities.Image
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import org.junit.Before

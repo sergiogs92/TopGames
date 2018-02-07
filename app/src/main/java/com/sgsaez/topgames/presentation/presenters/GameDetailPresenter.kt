@@ -1,10 +1,14 @@
 package com.sgsaez.topgames.presentation.presenters
 
+import com.sgsaez.topgames.domain.favourite.AddFavourite
+import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameDetailView
+import com.sgsaez.topgames.utils.SchedulerProvider
 import com.sgsaez.topgames.utils.fromHtml
 
-class GameDetailPresenter : BasePresenter<GameDetailView>() {
+class GameDetailPresenter(private val addFavourite: AddFavourite, private val schedulerProvider: SchedulerProvider) :
+        BasePresenter<GameDetailView>() {
 
     fun onInit(game: GameViewModel) {
         view?.addTitleToolbar(game.name)
@@ -20,5 +24,19 @@ class GameDetailPresenter : BasePresenter<GameDetailView>() {
 
     fun onResetStatusBarColor() {
         view?.resetStatusBarColor()
+    }
+
+    fun onSaveFavouriteGame(game: GameViewModel) {
+        addFavourite.execute(game)
+                .subscribeOn(schedulerProvider.ioScheduler())
+                .observeOn(schedulerProvider.uiScheduler())
+                .subscribe({ _ ->
+                    view?.showSaveFavourite()
+                }, {
+                    val favouritesException = it as FavouritesException
+                    when (favouritesException.tag) {
+                        FavouritesException.FAVOURITE_ALREADY_EXITS -> view?.showFavouriteAlreadyExists()
+                    }
+                })
     }
 }

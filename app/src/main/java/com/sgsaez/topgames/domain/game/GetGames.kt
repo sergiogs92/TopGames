@@ -1,7 +1,7 @@
 package com.sgsaez.topgames.domain.game
 
 import com.sgsaez.topgames.data.persistence.entities.GameList
-import com.sgsaez.topgames.data.repositories.GameRepository
+import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import io.reactivex.Single
 

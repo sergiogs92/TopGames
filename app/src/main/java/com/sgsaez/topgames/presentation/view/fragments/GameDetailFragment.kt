@@ -13,9 +13,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.graphics.Palette
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
 import com.sgsaez.topgames.BuildConfig
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.di.modules.GameDetailFragmentModule
@@ -39,14 +38,21 @@ class GameDetailFragment : Fragment(), GameDetailView {
     companion object {
         private const val TYPE_TEXT = "text/plain"
         private const val TYPE_IMAGE = "image/*"
+        private const val FAVOURITE_KEY: String = "FAVOURITE_KEY"
         private const val GAME_KEY: String = "GAME_KEY"
-        fun newInstance(game: GameViewModel): GameDetailFragment {
-            val fragment = GameDetailFragment()
-            val args = Bundle()
-            args.putParcelable(GAME_KEY, game)
-            fragment.arguments = args
-            return fragment
+        fun newInstance(game: GameViewModel, isFavourite: Boolean): GameDetailFragment {
+            return GameDetailFragment().apply {
+                val args = Bundle()
+                args.putBoolean(FAVOURITE_KEY, isFavourite)
+                args.putParcelable(GAME_KEY, game)
+                arguments = args
+            }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,11 +61,17 @@ class GameDetailFragment : Fragment(), GameDetailView {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initToolbar()
+        val isFavourite = arguments.getBoolean(FAVOURITE_KEY)
         val game = arguments.getParcelable<GameViewModel>(GAME_KEY)
+        initToolbar(game, isFavourite)
         initFloatingButton(game)
         presenter.attachView(this)
         presenter.onInit(game)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.game_detail_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -69,8 +81,17 @@ class GameDetailFragment : Fragment(), GameDetailView {
         }
     }
 
-    private fun initToolbar() {
+    private fun initToolbar(game: GameViewModel, isFavourite: Boolean) {
         detailToolbar.apply {
+            if (!isFavourite) {
+                inflateMenu(R.menu.game_detail_menu)
+                setOnMenuItemClickListener({ item ->
+                    when (item.itemId) {
+                        R.id.game_detail_favourite -> presenter.onSaveFavouriteGame(game)
+                    }
+                    return@setOnMenuItemClickListener true
+                })
+            }
             setNavigationIcon(R.drawable.ic_action_back)
             setNavigationOnClickListener { activity.onBackPressed() }
         }
@@ -145,8 +166,16 @@ class GameDetailFragment : Fragment(), GameDetailView {
         FileOutputStream(file).use {
             val bmp = (image.drawable as BitmapDrawable).bitmap
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
         }
-        return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+    }
+
+    override fun showSaveFavourite() {
+        Toast.makeText(context, resources.getString(R.string.saved_game), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showFavouriteAlreadyExists() {
+        Toast.makeText(context, resources.getString(R.string.favourite_already_exists), Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
@@ -162,4 +191,3 @@ class GameDetailFragment : Fragment(), GameDetailView {
         }
     }
 }
-

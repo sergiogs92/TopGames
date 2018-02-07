@@ -38,4 +38,8 @@ class GameListPresenter(private val getGames: GetGames,
         view?.navigateToGameList(query)
     }
 
+    fun onFavouritesClicked() {
+        view?.navigateToFavourites()
+    }
+
 }

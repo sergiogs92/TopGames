@@ -2,6 +2,7 @@ package com.sgsaez.topgames.di.components
 
 import com.sgsaez.topgames.TopGamesApplication
 import com.sgsaez.topgames.di.modules.ApplicationModule
+import com.sgsaez.topgames.di.modules.FavouriteListFragmentModule
 import com.sgsaez.topgames.di.modules.GameDetailFragmentModule
 import com.sgsaez.topgames.di.modules.GameListFragmentModule
 import dagger.Component
@@ -13,4 +14,5 @@ interface ApplicationComponent {
     fun inject(application: TopGamesApplication)
     fun plus(gameListFragmentModule: GameListFragmentModule) : GameListFragmentComponent
     fun plus(gameDetailFragmentModule: GameDetailFragmentModule) : GameDetailFragmentComponent
+    fun plus(favouriteListFragmentModule: FavouriteListFragmentModule) : FavouriteListFragmentComponent
 }

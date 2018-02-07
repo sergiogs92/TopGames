@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.data.repositories
+package com.sgsaez.topgames.data.repositories.game
 
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import io.reactivex.Single

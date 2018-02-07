@@ -9,9 +9,8 @@ import com.sgsaez.topgames.utils.inflate
 import com.sgsaez.topgames.utils.loadUrl
 import kotlinx.android.synthetic.main.game_item.view.*
 
-class GameListAdapter(
-        private val gameList: MutableList<GameViewModel>,
-        private val listener: (GameViewModel, View) -> Unit) : RecyclerView.Adapter<GameListAdapter.GameViewHolder>() {
+class GameListAdapter(private val gameList: MutableList<GameViewModel>,
+                      private val listener: GameListener) : RecyclerView.Adapter<GameListAdapter.GameViewHolder>() {
 
     override fun getItemCount() = gameList.size
 
@@ -29,11 +28,16 @@ class GameListAdapter(
     }
 
     class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(game: GameViewModel, listener: (GameViewModel, View) -> Unit) = with(itemView) {
+        fun bind(game: GameViewModel, listener: GameListener) = with(itemView) {
             name.text = game.name
             image.loadUrl(game.imageUrl)
-            setOnClickListener { listener(game, image) }
+            setOnClickListener { listener.onClickInGame(game) }
         }
+    }
+
+    interface GameListener {
+
+        fun onClickInGame(game: GameViewModel)
     }
 
 }

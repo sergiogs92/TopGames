@@ -9,4 +9,8 @@
     <string name="error_no_data_found">No data found</string>
     <string name="error_internet_connection">No internet connection</string>
     <string name="error_default">No connection to server. Try again later</string>
+    <string name="favourite">Favourite</string>
+    <string name="saved_game">Saved game</string>
+    <string name="favourites">Favourites</string>
+    <string name="favourite_already_exists">This game has already been saved</string>
 </resources>

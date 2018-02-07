@@ -1,12 +1,14 @@
 package com.sgsaez.topgames.data.repositories
 
-import com.sgsaez.topgames.data.network.GameService
+import com.sgsaez.topgames.data.network.ApiService
 import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
 import com.sgsaez.topgames.data.persistence.daos.GameDao
 import com.sgsaez.topgames.data.persistence.entities.Game
 import com.sgsaez.topgames.data.persistence.entities.GameList
-import com.sgsaez.topgames.domain.game.GamesException
 import com.sgsaez.topgames.data.persistence.entities.Image
+import com.sgsaez.topgames.data.repositories.game.DefaultGameRepository
+import com.sgsaez.topgames.data.repositories.game.GameRepository
+import com.sgsaez.topgames.domain.game.GamesException
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -18,7 +20,7 @@ import retrofit2.Response
 class GameRepositoryTest {
 
     @Mock
-    lateinit var mockGameService: GameService
+    lateinit var mockGameService: ApiService
 
     @Mock
     lateinit var mockGameDao: GameDao
