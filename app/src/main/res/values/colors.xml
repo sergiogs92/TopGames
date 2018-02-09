@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#4865ff</color>
-    <color name="white">#ffffffff</color>
+    <color name="colorPrimary">#121212</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#353535</color>
+    <color name="colorSwipeDark">#212121</color>
+    <color name="colorSwipeMedium">#424242</color>
+    <color name="colorSwipeLight">#616161</color>
+    <color name="white">#FFFFFF</color>
 </resources>

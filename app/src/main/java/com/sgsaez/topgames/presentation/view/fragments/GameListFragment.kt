@@ -108,7 +108,7 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     private fun initSwipeLayout() = swipeRefreshLayout.apply {
-        setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
+        setColorSchemeResources(R.color.colorSwipeDark, R.color.colorSwipeMedium, R.color.colorSwipeLight)
         setOnRefreshListener({ presenter.onLoadGames(query, isRefresh = true) })
     }
 
