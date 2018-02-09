@@ -11,15 +11,28 @@ import com.sgsaez.topgames.utils.SchedulerProvider
 class GameListPresenter(private val getGames: GetGames,
                         private val schedulerProvider: SchedulerProvider) : BasePresenter<GameListView>() {
 
+    private var initValue = 0
+    private var loading = false
+
+    companion object {
+        private const val INCREMENT = 20
+        private const val LAST_VALUE = 100
+    }
+
     fun onLoadGames(query: String, isRefresh: Boolean = false) {
-        getGames.execute(query)
+        loading = true
+        if (isRefresh) initValue = 0
+        getGames.execute(initValue.toString(), query)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe({ games ->
+                    loading = false
+                    view?.hideLoading()
                     if (isRefresh) view?.clearList()
                     view?.addGameToList(games)
-                    view?.hideLoading()
+                    initValue += initValue.plus(INCREMENT)
                 }, {
+                    loading = false
                     view?.hideLoading()
                     val gamesException = it as GamesException
                     when (gamesException.tag) {
@@ -28,6 +41,19 @@ class GameListPresenter(private val getGames: GetGames,
                         else -> view?.showDefaultError()
                     }
                 })
+    }
+
+    fun onScrollChanged(visibleItemCount: Int, totalItemCount: Int, firstVisibleItemPosition: Int) {
+        when {
+            loading && initValue <= LAST_VALUE -> view?.showLoading()
+            !loading && initValue <= LAST_VALUE -> checkLoadGame(visibleItemCount, firstVisibleItemPosition, totalItemCount)
+        }
+    }
+
+    private fun checkLoadGame(visibleItemCount: Int, firstVisibleItemPosition: Int, totalItemCount: Int) {
+        if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
+            onLoadGames("")
+        }
     }
 
     fun onGameClicked(game: GameViewModel) {
@@ -41,5 +67,4 @@ class GameListPresenter(private val getGames: GetGames,
     fun onFavouritesClicked() {
         view?.navigateToFavourites()
     }
-
 }

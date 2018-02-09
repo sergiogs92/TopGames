@@ -132,7 +132,7 @@ class GameListFragmentTest {
             val gameList = GameList(getMockGameList())
             emitter.onSuccess(gameList)
         }
-        whenever(mockGameRepository.getGames("")).thenReturn(mockSingle)
+        whenever(mockGameRepository.getGames("0", "")).thenReturn(mockSingle)
     }
 
     private fun getMockGameList(): List<Game> = (1..10).map {

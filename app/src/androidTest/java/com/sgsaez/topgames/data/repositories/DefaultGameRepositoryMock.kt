@@ -9,7 +9,7 @@ import io.reactivex.SingleEmitter
 
 class DefaultGameRepositoryMock : GameRepository {
 
-    override fun getGames(query: String): Single<GameList> {
+    override fun getGames(initValue: String, query: String): Single<GameList> {
         return Single.create<GameList> { emitter: SingleEmitter<GameList> ->
             val gameList = GameList(getMockGameList())
             emitter.onSuccess(gameList)

@@ -47,7 +47,7 @@ class GameRepositoryTest {
         val games = GameList(emptyList())
 
         setUpMocks(games, true)
-        val testObserver = gameRepository.getGames("").test()
+        val testObserver = gameRepository.getGames("0", "").test()
 
         testObserver.assertError(GamesException(GamesException.ERROR_NO_DATA_RECEIVED))
     }
@@ -57,7 +57,7 @@ class GameRepositoryTest {
         val games = GameList(listOf(Game("1", "This is the game", "My game", Image("url"))))
 
         setUpMocks(games, true)
-        val testObserver = gameRepository.getGames("").test()
+        val testObserver = gameRepository.getGames("0", "").test()
 
         testObserver.assertNoErrors()
         testObserver.assertValue { gamesResult: GameList -> gamesResult.results.size == 1 }
@@ -66,7 +66,7 @@ class GameRepositoryTest {
 
     private fun setUpMocks(modelFromUserService: GameList, isOnline: Boolean) {
         Mockito.`when`(mockConnectivityChecker.isOnline()).thenReturn(isOnline)
-        Mockito.`when`(mockApiService.getGames()).thenReturn(mockGameCall)
+        Mockito.`when`(mockApiService.getGames("0")).thenReturn(mockGameCall)
         Mockito.`when`(mockGameCall.execute()).thenReturn(mockGameResponse)
         Mockito.`when`(mockGameResponse.body()).thenReturn(modelFromUserService)
         Mockito.`when`(mockGameDao.getGames()).thenReturn(emptyList())

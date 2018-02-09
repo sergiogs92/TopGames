@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
@@ -115,6 +117,16 @@ class GameListFragment : Fragment(), GameListView {
         val orientation = resources.configuration.orientation
         layoutManager = GridLayoutManager(context, if (orientation == ORIENTATION_PORTRAIT) 3 else 5)
         adapter = gameListAdapter
+        if (query.isEmpty()) {
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    presenter.onScrollChanged(visibleItemCount, totalItemCount, firstVisibleItemPosition)
+                }
+            })
+        }
     }
 
     private fun initMenu(menu: Menu?) {

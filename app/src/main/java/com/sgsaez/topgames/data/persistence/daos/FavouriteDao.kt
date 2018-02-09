@@ -5,7 +5,7 @@ import com.sgsaez.topgames.data.persistence.entities.Favourite
 
 @Dao
 interface FavouriteDao {
-    @Query("SELECT * FROM favourite ORDER BY name")
+    @Query("SELECT * FROM favourite")
     fun getFavourites(): List<Favourite>
 
     @Query("SELECT * FROM favourite WHERE id=:arg0")

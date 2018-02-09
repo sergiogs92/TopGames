@@ -8,7 +8,7 @@ import com.sgsaez.topgames.data.persistence.entities.Game
 
 @Dao
 interface GameDao {
-    @Query("SELECT * FROM game ORDER BY name")
+    @Query("SELECT * FROM game")
     fun getGames(): List<Game>
 
     @Query("SELECT * FROM game WHERE name LIKE :arg0")
