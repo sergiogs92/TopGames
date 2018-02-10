@@ -69,9 +69,16 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
 
     private fun initAdapter() = recyclerView.apply {
         setHasFixedSize(true)
-        val orientation = resources.configuration.orientation
-        layoutManager = GridLayoutManager(context, if (orientation == Configuration.ORIENTATION_PORTRAIT) 3 else 5)
+        val spanCount = getColumnsNumber()
+        layoutManager = GridLayoutManager(context, spanCount)
         adapter = favouriteListAdapter
+    }
+
+    private fun getColumnsNumber(): Int {
+        val orientation = resources.configuration.orientation
+        val portraitColumns = resources.getInteger(R.integer.portrait_columns)
+        val landscapeColumns = resources.getInteger(R.integer.landscape_columns)
+        return if (orientation == Configuration.ORIENTATION_PORTRAIT) portraitColumns else landscapeColumns
     }
 
     override fun addFavouriteToList(favouriteGames: List<GameViewModel>) {

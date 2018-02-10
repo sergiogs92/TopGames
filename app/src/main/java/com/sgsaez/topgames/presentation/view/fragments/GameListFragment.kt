@@ -1,7 +1,6 @@
 package com.sgsaez.topgames.presentation.view.fragments
 
 import android.content.res.Configuration
-import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -114,8 +113,8 @@ class GameListFragment : Fragment(), GameListView {
 
     private fun initAdapter() = recyclerView.apply {
         setHasFixedSize(true)
-        val orientation = resources.configuration.orientation
-        layoutManager = GridLayoutManager(context, if (orientation == ORIENTATION_PORTRAIT) 3 else 5)
+        val spanCount = getColumnsNumber()
+        layoutManager = GridLayoutManager(context, spanCount)
         adapter = gameListAdapter
         if (query.isEmpty()) {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -127,6 +126,13 @@ class GameListFragment : Fragment(), GameListView {
                 }
             })
         }
+    }
+
+    private fun getColumnsNumber(): Int {
+        val orientation = resources.configuration.orientation
+        val portraitColumns = resources.getInteger(R.integer.portrait_columns)
+        val landscapeColumns = resources.getInteger(R.integer.landscape_columns)
+        return if (orientation == Configuration.ORIENTATION_PORTRAIT) portraitColumns else landscapeColumns
     }
 
     private fun initMenu(menu: Menu?) {
