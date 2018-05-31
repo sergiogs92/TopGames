@@ -4,18 +4,17 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.sgsaez.topgames.R
-import com.sgsaez.topgames.presentation.view.fragments.GameListFragment
+import com.sgsaez.topgames.presentation.view.fragments.newGameListInstance
+import com.sgsaez.topgames.utils.condition
+
+private const val FIRST_FRAGMENT: Int = 1
 
 class MainActivity : AppCompatActivity() {
-
-    companion object {
-        private const val FIRST_FRAGMENT: Int = 1
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val listFragment = GameListFragment.newInstance("")
+        val listFragment = newGameListInstance("")
         (addFragment(listFragment))
     }
 
@@ -29,6 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val fragments = supportFragmentManager.backStackEntryCount
-        if (fragments == FIRST_FRAGMENT) finish() else super.onBackPressed()
+        condition({ fragments == FIRST_FRAGMENT }, { finish() }, { super.onBackPressed() })
     }
 }

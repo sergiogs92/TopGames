@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
@@ -17,8 +15,17 @@ import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.presentation.view.adapters.GameListAdapter
+import com.sgsaez.topgames.utils.condition
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_game_list.*
+
+private const val QUERY_KEY: String = "QUERY_KEY"
+
+fun newGameListInstance(query: String): GameListFragment = GameListFragment().apply {
+    val args = Bundle()
+    args.putString(QUERY_KEY, query)
+    arguments = args
+}
 
 class GameListFragment : Fragment(), GameListView {
 
@@ -31,17 +38,6 @@ class GameListFragment : Fragment(), GameListView {
                 presenter.onGameClicked(game)
             }
         })
-    }
-
-    companion object {
-        private const val QUERY_KEY: String = "QUERY_KEY"
-        fun newInstance(query: String): GameListFragment {
-            return GameListFragment().apply {
-                val args = Bundle()
-                args.putString(QUERY_KEY, query)
-                arguments = args
-            }
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,15 +86,14 @@ class GameListFragment : Fragment(), GameListView {
 
     private fun initToolbar() {
         listToolbar.apply {
-            title = if (query.isEmpty()) {
+            title = condition({ query.isEmpty() }, {
                 inflateMenu(R.menu.game_list_menu)
                 resources.getString(R.string.app_name)
-            } else {
-                String.format(resources.getString(R.string.search_title), query)
-            }
+            }, { String.format(resources.getString(R.string.search_title), query) })
         }
-        (activity as AppCompatActivity).setSupportActionBar(listToolbar)
-        (activity as AppCompatActivity).supportActionBar?.apply {
+        val appCompatActivity = activity as AppCompatActivity
+        appCompatActivity.setSupportActionBar(listToolbar)
+        appCompatActivity.supportActionBar?.apply {
             if (query.isNotEmpty()) {
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
@@ -107,32 +102,15 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     private fun initSwipeLayout() = swipeRefreshLayout.apply {
-        setColorSchemeResources(R.color.colorSwipeDark, R.color.colorSwipeMedium, R.color.colorSwipeLight)
+        setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
         setOnRefreshListener({ presenter.onLoadGames(query, isRefresh = true) })
     }
 
     private fun initAdapter() = recyclerView.apply {
         setHasFixedSize(true)
-        val spanCount = getColumnsNumber()
-        layoutManager = GridLayoutManager(context, spanCount)
-        adapter = gameListAdapter
-        if (query.isEmpty()) {
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
-                    val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                    presenter.onScrollChanged(visibleItemCount, totalItemCount, firstVisibleItemPosition)
-                }
-            })
-        }
-    }
-
-    private fun getColumnsNumber(): Int {
         val orientation = resources.configuration.orientation
-        val portraitColumns = resources.getInteger(R.integer.portrait_columns)
-        val landscapeColumns = resources.getInteger(R.integer.landscape_columns)
-        return if (orientation == Configuration.ORIENTATION_PORTRAIT) portraitColumns else landscapeColumns
+        layoutManager = GridLayoutManager(context, condition({ orientation == Configuration.ORIENTATION_PORTRAIT }, { 3 }, { 5 }))
+        adapter = gameListAdapter
     }
 
     private fun initMenu(menu: Menu?) {
@@ -187,17 +165,17 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     override fun navigateToGame(game: GameViewModel) {
-        val detailsFragment = GameDetailFragment.newInstance(game, false)
+        val detailsFragment = newGameDetailInstance(game, false)
         (activity as MainActivity).addFragment(detailsFragment)
     }
 
     override fun navigateToGameList(query: String) {
-        val gameListFragment = GameListFragment.newInstance(query)
+        val gameListFragment = newGameListInstance(query)
         (activity as MainActivity).addFragment(gameListFragment)
     }
 
     override fun navigateToFavourites() {
-        val favouriteListFragment = FavouriteListFragment.newInstance()
+        val favouriteListFragment = newFavouriteListInstance()
         (activity as MainActivity).addFragment(favouriteListFragment)
     }
 

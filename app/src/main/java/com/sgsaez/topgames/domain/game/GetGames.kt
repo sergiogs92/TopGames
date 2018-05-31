@@ -3,6 +3,7 @@ package com.sgsaez.topgames.domain.game
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.utils.condition
 import io.reactivex.Single
 
 class GetGames(private val gameRepository: GameRepository) {
@@ -11,7 +12,10 @@ class GetGames(private val gameRepository: GameRepository) {
         val games = gameRepository.getGames(initValue, query)
         return games.map { gameList: GameList? ->
             val items = gameList?.results ?: emptyList()
-            items.map { GameViewModel(it.id, if (it.description.isNullOrBlank()) "No description" else it.description!!, it.name, it.image.url) }
+            items.map {
+                val description = condition({ it.description.isNullOrBlank() }, { "No description" }, { it.description!! })
+                GameViewModel(it.id, description, it.name, it.image.url)
+            }
         }
     }
 }

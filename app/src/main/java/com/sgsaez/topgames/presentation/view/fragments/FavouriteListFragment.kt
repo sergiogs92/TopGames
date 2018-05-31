@@ -15,8 +15,11 @@ import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
 import com.sgsaez.topgames.presentation.view.FavouriteListView
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.presentation.view.adapters.FavouriteListAdapter
+import com.sgsaez.topgames.utils.condition
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_favourite_list.*
+
+fun newFavouriteListInstance() = FavouriteListFragment()
 
 class FavouriteListFragment : Fragment(), FavouriteListView {
 
@@ -32,12 +35,6 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
                 presenter.onRemoveFavouriteGame(favouriteGame)
             }
         })
-    }
-
-    companion object {
-        fun newInstance(): FavouriteListFragment {
-            return FavouriteListFragment()
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -69,16 +66,9 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
 
     private fun initAdapter() = recyclerView.apply {
         setHasFixedSize(true)
-        val spanCount = getColumnsNumber()
-        layoutManager = GridLayoutManager(context, spanCount)
-        adapter = favouriteListAdapter
-    }
-
-    private fun getColumnsNumber(): Int {
         val orientation = resources.configuration.orientation
-        val portraitColumns = resources.getInteger(R.integer.portrait_columns)
-        val landscapeColumns = resources.getInteger(R.integer.landscape_columns)
-        return if (orientation == Configuration.ORIENTATION_PORTRAIT) portraitColumns else landscapeColumns
+        layoutManager = GridLayoutManager(context, condition({ orientation == Configuration.ORIENTATION_PORTRAIT }, { 3 }, { 5 }))
+        adapter = favouriteListAdapter
     }
 
     override fun addFavouriteToList(favouriteGames: List<GameViewModel>) {
@@ -95,7 +85,7 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
     }
 
     override fun navigateToGame(favouriteGame: GameViewModel) {
-        val detailsFragment = GameDetailFragment.newInstance(favouriteGame, true)
+        val detailsFragment = newGameDetailInstance(favouriteGame, true)
         (activity as MainActivity).addFragment(detailsFragment)
     }
 

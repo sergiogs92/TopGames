@@ -30,25 +30,23 @@ import kotlinx.android.synthetic.main.fragment_game_detail.*
 import java.io.File
 import java.io.FileOutputStream
 
+private const val TYPE_TEXT = "text/plain"
+private const val TYPE_IMAGE = "image/*"
+private const val FAVOURITE_KEY: String = "FAVOURITE_KEY"
+private const val GAME_KEY: String = "GAME_KEY"
+
+fun newGameDetailInstance(game: GameViewModel, isFavourite: Boolean): GameDetailFragment =
+        GameDetailFragment().apply {
+            val args = Bundle()
+            args.putBoolean(FAVOURITE_KEY, isFavourite)
+            args.putParcelable(GAME_KEY, game)
+            arguments = args
+        }
+
 class GameDetailFragment : Fragment(), GameDetailView {
 
     private val presenter: GameDetailPresenter by lazy { component.presenter() }
     private val component by lazy { topGamesApplication.component.plus(GameDetailFragmentModule()) }
-
-    companion object {
-        private const val TYPE_TEXT = "text/plain"
-        private const val TYPE_IMAGE = "image/*"
-        private const val FAVOURITE_KEY: String = "FAVOURITE_KEY"
-        private const val GAME_KEY: String = "GAME_KEY"
-        fun newInstance(game: GameViewModel, isFavourite: Boolean): GameDetailFragment {
-            return GameDetailFragment().apply {
-                val args = Bundle()
-                args.putBoolean(FAVOURITE_KEY, isFavourite)
-                args.putParcelable(GAME_KEY, game)
-                arguments = args
-            }
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
