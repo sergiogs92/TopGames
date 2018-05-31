@@ -16,15 +16,15 @@ import io.reactivex.SingleEmitter
 class DefaultGameRepository(private val gameService: ApiService, private val gameDao: GameDao,
                             private val connectivityChecker: ConnectivityChecker) : GameRepository {
 
-    override fun getGames(query: String): Single<GameList> {
-        return Single.create<GameList> { emitter: SingleEmitter<GameList> -> loadGames(query, emitter) }
+    override fun getGames(initValue: String, query: String): Single<GameList> {
+        return Single.create<GameList> { emitter: SingleEmitter<GameList> -> loadGames(initValue, query, emitter) }
     }
 
-    private fun loadGames(query: String, emitter: SingleEmitter<GameList>) {
+    private fun loadGames(initValue: String, query: String, emitter: SingleEmitter<GameList>) {
         try {
             condition({ query.isEmpty() },
                     {
-                        val games = gameService.getGames().execute().body()
+                        val games = gameService.getGames(initValue).execute().body()
                         games?.let {
                             saveGamesReceived(it, emitter)
                         }
