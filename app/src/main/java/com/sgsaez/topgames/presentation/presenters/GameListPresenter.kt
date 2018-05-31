@@ -8,16 +8,14 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.utils.SchedulerProvider
 
+private const val INCREMENT = 20
+private const val LAST_VALUE = 100
+
 class GameListPresenter(private val getGames: GetGames,
                         private val schedulerProvider: SchedulerProvider) : BasePresenter<GameListView>() {
 
     private var initValue = 0
     private var loading = false
-
-    companion object {
-        private const val INCREMENT = 20
-        private const val LAST_VALUE = 100
-    }
 
     fun onLoadGames(query: String, isRefresh: Boolean = false) {
         loading = true

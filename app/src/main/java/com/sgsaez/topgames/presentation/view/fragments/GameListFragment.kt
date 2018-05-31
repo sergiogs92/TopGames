@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
@@ -108,9 +110,26 @@ class GameListFragment : Fragment(), GameListView {
 
     private fun initAdapter() = recyclerView.apply {
         setHasFixedSize(true)
-        val orientation = resources.configuration.orientation
-        layoutManager = GridLayoutManager(context, condition({ orientation == Configuration.ORIENTATION_PORTRAIT }, { 3 }, { 5 }))
+        val spanCount = getColumnsNumber()
+        layoutManager = GridLayoutManager(context, spanCount)
         adapter = gameListAdapter
+        if (query.isEmpty()) {
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+                    val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    presenter.onScrollChanged(visibleItemCount, totalItemCount, firstVisibleItemPosition)
+                }
+            })
+        }
+    }
+
+    private fun getColumnsNumber(): Int {
+        val orientation = resources.configuration.orientation
+        val portraitColumns = resources.getInteger(R.integer.portrait_columns)
+        val landscapeColumns = resources.getInteger(R.integer.landscape_columns)
+        return if (orientation == Configuration.ORIENTATION_PORTRAIT) portraitColumns else landscapeColumns
     }
 
     private fun initMenu(menu: Menu?) {
