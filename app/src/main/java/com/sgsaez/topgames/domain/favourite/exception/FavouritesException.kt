@@ -1,8 +1,8 @@
 package com.sgsaez.topgames.domain.favourite.exception
 
-data class FavouritesException(var tag: Int, override var message: String = "") : Throwable(message) {
-    companion object {
-        const val ERROR_NO_DATA_FOUND = 1
-        const val FAVOURITE_ALREADY_EXITS = 2
-    }
+data class FavouritesException(var error: FavoriteError, override var message: String = "") : Throwable(message)
+
+enum class FavoriteError {
+    ERROR_NO_DATA_FOUND,
+    FAVOURITE_ALREADY_EXITS
 }

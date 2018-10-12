@@ -70,5 +70,6 @@ class GameDetailPresenterTest {
 
         Mockito.verify(mockView).showSaveFavourite()
     }
+
 }
 

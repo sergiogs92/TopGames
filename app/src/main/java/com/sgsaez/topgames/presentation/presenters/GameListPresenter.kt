@@ -1,8 +1,7 @@
 package com.sgsaez.topgames.presentation.presenters
 
+import com.sgsaez.topgames.domain.game.GameError
 import com.sgsaez.topgames.domain.game.GamesException
-import com.sgsaez.topgames.domain.game.GamesException.Companion.ERROR_INTERNET_CONNECTION
-import com.sgsaez.topgames.domain.game.GamesException.Companion.ERROR_NO_DATA_FOUND
 import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameListView
@@ -33,9 +32,9 @@ class GameListPresenter(private val getGames: GetGames,
                     loading = false
                     view?.hideLoading()
                     val gamesException = it as GamesException
-                    when (gamesException.tag) {
-                        ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
-                        ERROR_INTERNET_CONNECTION -> view?.showInternetConnectionError()
+                    when (gamesException.error) {
+                        GameError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
+                        GameError.ERROR_INTERNET_CONNECTION -> view?.showInternetConnectionError()
                         else -> view?.showDefaultError()
                     }
                 })

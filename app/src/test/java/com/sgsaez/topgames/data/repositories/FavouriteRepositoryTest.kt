@@ -6,6 +6,7 @@ import com.sgsaez.topgames.data.persistence.entities.FavouriteList
 import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.data.repositories.favourite.DefaultFavouriteRepository
 import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
+import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
 import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import org.junit.Before
 import org.junit.Test
@@ -45,7 +46,7 @@ class FavouriteRepositoryTest {
         setUpMocks(favourites)
         val testObserver = favouriteRepository.getFavorites().test()
 
-        testObserver.assertError(FavouritesException(FavouritesException.ERROR_NO_DATA_FOUND))
+        testObserver.assertError(FavouritesException(FavoriteError.ERROR_NO_DATA_FOUND))
     }
 
     @Test

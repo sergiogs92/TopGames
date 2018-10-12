@@ -9,5 +9,6 @@ interface GameDetailView {
     fun showSocialSharedNetworks(game: GameViewModel)
     fun showSaveFavourite()
     fun showFavouriteAlreadyExists()
+    fun showGeneralError()
     fun resetStatusBarColor()
 }

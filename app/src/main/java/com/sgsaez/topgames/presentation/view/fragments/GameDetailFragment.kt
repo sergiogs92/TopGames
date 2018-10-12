@@ -176,6 +176,10 @@ class GameDetailFragment : Fragment(), GameDetailView {
         Toast.makeText(context, resources.getString(R.string.favourite_already_exists), Toast.LENGTH_SHORT).show()
     }
 
+    override fun showGeneralError() {
+        Toast.makeText(context, resources.getString(R.string.unknown_error), Toast.LENGTH_SHORT).show()
+    }
+
     override fun onDestroyView() {
         presenter.onResetStatusBarColor()
         presenter.detachView()

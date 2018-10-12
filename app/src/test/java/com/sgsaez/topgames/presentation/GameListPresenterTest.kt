@@ -1,7 +1,7 @@
 package com.sgsaez.topgames.presentation
 
+import com.sgsaez.topgames.domain.game.GameError
 import com.sgsaez.topgames.domain.game.GamesException
-import com.sgsaez.topgames.domain.game.GamesException.Companion.DEFAULT
 import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
@@ -39,7 +39,7 @@ class GameListPresenterTest {
     @Test
     fun testGetGamesErrorCaseShowError() {
         val single: Single<List<GameViewModel>> = Single.create { emitter ->
-            emitter.onError(GamesException(DEFAULT))
+            emitter.onError(GamesException(GameError.DEFAULT))
         }
 
         `when`(mockGetGames.execute("0", "")).thenReturn(single)
@@ -65,4 +65,5 @@ class GameListPresenterTest {
         Mockito.verify(mockView).addGameToList(games)
         Mockito.verify(mockView).hideLoading()
     }
+
 }

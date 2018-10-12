@@ -8,6 +8,7 @@ import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.data.repositories.game.DefaultGameRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
+import com.sgsaez.topgames.domain.game.GameError
 import com.sgsaez.topgames.domain.game.GamesException
 import org.junit.Before
 import org.junit.Test
@@ -49,7 +50,7 @@ class GameRepositoryTest {
         setUpMocks(games, true)
         val testObserver = gameRepository.getGames("0", "").test()
 
-        testObserver.assertError(GamesException(GamesException.ERROR_NO_DATA_RECEIVED))
+        testObserver.assertError(GamesException(GameError.ERROR_NO_DATA_RECEIVED))
     }
 
     @Test

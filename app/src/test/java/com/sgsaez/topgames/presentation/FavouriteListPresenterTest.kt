@@ -2,6 +2,7 @@ package com.sgsaez.topgames.presentation
 
 import com.sgsaez.topgames.domain.favourite.GetFavourites
 import com.sgsaez.topgames.domain.favourite.RemoveFavourite
+import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
 import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
@@ -42,7 +43,7 @@ class FavouriteListPresenterTest {
     @Test
     fun testGetFavouritesErrorCaseShowNoDataFound() {
         val single: Single<List<GameViewModel>> = Single.create { emitter ->
-            emitter.onError(FavouritesException(FavouritesException.ERROR_NO_DATA_FOUND))
+            emitter.onError(FavouritesException(FavoriteError.ERROR_NO_DATA_FOUND))
         }
 
         `when`(mockGetFavourites.execute()).thenReturn(single)
@@ -82,4 +83,5 @@ class FavouriteListPresenterTest {
 
         Mockito.verify(mockView).removeFavouriteToList(favourite)
     }
+
 }

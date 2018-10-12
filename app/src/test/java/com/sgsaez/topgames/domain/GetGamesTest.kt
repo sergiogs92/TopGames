@@ -53,4 +53,5 @@ class GetGamesTest {
         testObserver.assertNoErrors()
         testObserver.assertValue { userViewModels: List<GameViewModel> -> userViewModels.isEmpty() }
     }
+
 }
