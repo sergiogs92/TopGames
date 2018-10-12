@@ -23,6 +23,7 @@ import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
 import com.sgsaez.topgames.presentation.view.GameDetailView
 import com.sgsaez.topgames.utils.isLollipopOrAbove
 import com.sgsaez.topgames.utils.topGamesApplication
+import com.sgsaez.topgames.utils.withBundle
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.description_item.*
@@ -36,11 +37,9 @@ private const val FAVOURITE_KEY: String = "FAVOURITE_KEY"
 private const val GAME_KEY: String = "GAME_KEY"
 
 fun newGameDetailInstance(game: GameViewModel, isFavourite: Boolean): GameDetailFragment =
-        GameDetailFragment().apply {
-            val args = Bundle()
-            args.putBoolean(FAVOURITE_KEY, isFavourite)
-            args.putParcelable(GAME_KEY, game)
-            arguments = args
+        withBundle(GameDetailFragment()) {
+            putBoolean(FAVOURITE_KEY, isFavourite)
+            putParcelable(GAME_KEY, game)
         }
 
 class GameDetailFragment : Fragment(), GameDetailView {
