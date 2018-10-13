@@ -23,7 +23,8 @@
         app:layout_constraintEnd_toEndOf="@+id/appbar"
         app:layout_constraintStart_toStartOf="@+id/appbar"
         app:layout_constraintTop_toTopOf="@+id/appbar"
-        app:layout_scrollFlags="scroll|enterAlways" />
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:titleTextColor="@android:color/white" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
