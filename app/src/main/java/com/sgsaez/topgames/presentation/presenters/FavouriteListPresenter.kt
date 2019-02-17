@@ -12,7 +12,7 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites, private v
                              private val schedulerProvider: SchedulerProvider) : BasePresenter<FavouriteListView>() {
 
     fun onLoadFavourites() {
-        getFavourites.execute()
+        compositeDisposable.add(getFavourites.execute()
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe({ favourites ->
@@ -23,7 +23,7 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites, private v
                         FavoriteError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
                         else -> view?.showNoDataFoundError()
                     }
-                })
+                }))
     }
 
     fun onFavouriteClicked(favourite: GameViewModel) {
@@ -31,11 +31,12 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites, private v
     }
 
     fun onRemoveFavouriteGame(favourite: GameViewModel) {
-        removeFavourite.execute(favourite)
+        compositeDisposable.add(removeFavourite.execute(favourite)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
-                .subscribe({ _ ->
+                .subscribe { _ ->
                     view?.removeFavouriteToList(favourite)
                 })
     }
+
 }

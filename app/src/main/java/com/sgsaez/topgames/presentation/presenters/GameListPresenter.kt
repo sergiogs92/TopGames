@@ -10,8 +10,7 @@ import com.sgsaez.topgames.utils.SchedulerProvider
 private const val INCREMENT = 20
 private const val LAST_VALUE = 100
 
-class GameListPresenter(private val getGames: GetGames,
-                        private val schedulerProvider: SchedulerProvider) : BasePresenter<GameListView>() {
+class GameListPresenter(private val getGames: GetGames, private val schedulerProvider: SchedulerProvider) : BasePresenter<GameListView>() {
 
     private var initValue = 0
     private var loading = false
@@ -19,7 +18,7 @@ class GameListPresenter(private val getGames: GetGames,
     fun onLoadGames(query: String, isRefresh: Boolean = false) {
         loading = true
         if (isRefresh) initValue = 0
-        getGames.execute(initValue.toString(), query)
+        compositeDisposable.add(getGames.execute(initValue.toString(), query)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe({ games ->
@@ -37,7 +36,7 @@ class GameListPresenter(private val getGames: GetGames,
                         GameError.ERROR_INTERNET_CONNECTION -> view?.showInternetConnectionError()
                         else -> view?.showDefaultError()
                     }
-                })
+                }))
     }
 
     fun onScrollChanged(visibleItemCount: Int, totalItemCount: Int, firstVisibleItemPosition: Int) {
@@ -64,4 +63,5 @@ class GameListPresenter(private val getGames: GetGames,
     fun onFavouritesClicked() {
         view?.navigateToFavourites()
     }
+
 }

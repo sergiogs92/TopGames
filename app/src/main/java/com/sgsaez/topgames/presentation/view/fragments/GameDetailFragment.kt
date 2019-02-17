@@ -180,6 +180,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     override fun onDestroyView() {
+        presenter.disposeComposite()
         presenter.onResetStatusBarColor()
         presenter.detachView()
         super.onDestroyView()

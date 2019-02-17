@@ -28,7 +28,7 @@ class GameDetailPresenter(private val addFavourite: AddFavourite, private val sc
     }
 
     fun onSaveFavouriteGame(game: GameViewModel) {
-        addFavourite.execute(game)
+        compositeDisposable.add(addFavourite.execute(game)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe({ _ ->
@@ -39,6 +39,7 @@ class GameDetailPresenter(private val addFavourite: AddFavourite, private val sc
                         FavoriteError.FAVOURITE_ALREADY_EXITS -> view?.showFavouriteAlreadyExists()
                         else -> view?.showGeneralError()
                     }
-                })
+                }))
     }
+
 }

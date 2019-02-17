@@ -199,6 +199,7 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     override fun onDestroyView() {
+        presenter.disposeComposite()
         presenter.detachView()
         super.onDestroyView()
     }
