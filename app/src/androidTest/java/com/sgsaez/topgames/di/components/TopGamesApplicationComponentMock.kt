@@ -5,5 +5,5 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(TopGamesApplicationModuleMock::class))
+@Component(modules = [TopGamesApplicationModuleMock::class])
 interface TopGamesApplicationComponentMock : ApplicationComponent

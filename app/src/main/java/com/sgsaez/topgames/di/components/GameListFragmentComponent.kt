@@ -4,7 +4,7 @@ import com.sgsaez.topgames.di.modules.GameListFragmentModule
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import dagger.Subcomponent
 
-@Subcomponent(modules = arrayOf(GameListFragmentModule::class))
+@Subcomponent(modules = [GameListFragmentModule::class])
 interface GameListFragmentComponent {
     fun presenter() : GameListPresenter
 }

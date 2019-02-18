@@ -24,7 +24,7 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
                         String.format("%s (resource name not found)", recyclerViewId)
                     }
                 }
-                description.appendText("with id: " + idDescription)
+                description.appendText("with id: $idDescription")
             }
 
             public override fun matchesSafely(view: View): Boolean {
@@ -32,7 +32,7 @@ class RecyclerViewMatcher(private val recyclerViewId: Int) {
                 if (childView == null) {
                     val recyclerView = view.rootView.findViewById<RecyclerView>(recyclerViewId)
                     if (recyclerView != null && recyclerView.id == recyclerViewId) {
-                        childView = recyclerView.findViewHolderForAdapterPosition(position).itemView
+                        childView = recyclerView.findViewHolderForAdapterPosition(position)!!.itemView
                     } else {
                         return false
                     }

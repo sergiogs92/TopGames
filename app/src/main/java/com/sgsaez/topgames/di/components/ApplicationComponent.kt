@@ -9,7 +9,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class))
+@Component(modules = [ApplicationModule::class])
 interface ApplicationComponent {
     fun inject(application: TopGamesApplication)
     fun plus(gameListFragmentModule: GameListFragmentModule) : GameListFragmentComponent
