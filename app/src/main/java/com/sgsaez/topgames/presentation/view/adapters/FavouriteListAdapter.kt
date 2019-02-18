@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.presentation.model.GameViewModel
-import com.sgsaez.topgames.utils.condition
 import com.sgsaez.topgames.utils.inflate
 import com.sgsaez.topgames.utils.loadUrl
 import kotlinx.android.synthetic.main.game_item.view.*
@@ -13,12 +12,9 @@ import kotlinx.android.synthetic.main.game_item.view.*
 class FavouriteListAdapter(private val favouriteList: MutableList<GameViewModel>,
                            private val listener: FavouriteListener) : RecyclerView.Adapter<FavouriteListAdapter.FavouriteViewHolder>() {
 
-
     override fun getItemCount() = favouriteList.size
 
-    override fun onBindViewHolder(holder: FavouriteViewHolder, position: Int) {
-        holder.bind(favouriteList[position], listener)
-    }
+    override fun onBindViewHolder(holder: FavouriteViewHolder, position: Int) = holder.bind(favouriteList[position], listener)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = FavouriteViewHolder(parent.inflate(R.layout.game_item))
 
@@ -42,7 +38,7 @@ class FavouriteListAdapter(private val favouriteList: MutableList<GameViewModel>
             }
             setOnClickListener { listener.onClickInGame(favourite) }
             setOnLongClickListener {
-                condition({ close.visibility == View.GONE }, { close.visibility = View.VISIBLE }, { close.visibility = View.GONE })
+                close.visibility = if (close.visibility == View.GONE) View.VISIBLE else View.GONE
                 true
             }
         }

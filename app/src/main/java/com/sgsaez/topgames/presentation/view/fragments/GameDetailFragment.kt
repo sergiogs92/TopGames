@@ -52,14 +52,14 @@ class GameDetailFragment : Fragment(), GameDetailView {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_game_detail, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_game_detail, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val isFavourite = arguments.getBoolean(FAVOURITE_KEY)
-        val game = arguments.getParcelable<GameViewModel>(GAME_KEY)
+        val isFavourite = arguments?.getBoolean(FAVOURITE_KEY)!!
+        val game = arguments?.getParcelable<GameViewModel>(GAME_KEY)!!
         initToolbar(game, isFavourite)
         initFloatingButton(game)
         presenter.attachView(this)
@@ -82,15 +82,15 @@ class GameDetailFragment : Fragment(), GameDetailView {
         detailToolbar.apply {
             if (!isFavourite) {
                 inflateMenu(R.menu.game_detail_menu)
-                setOnMenuItemClickListener({ item ->
+                setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.game_detail_favourite -> presenter.onSaveFavouriteGame(game)
                     }
                     return@setOnMenuItemClickListener true
-                })
+                }
             }
             setNavigationIcon(R.drawable.ic_action_back)
-            setNavigationOnClickListener { activity.onBackPressed() }
+            setNavigationOnClickListener { activity!!.onBackPressed() }
         }
     }
 
@@ -114,7 +114,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
         Picasso.with(image.context).load(url).into(image, object : Callback {
             override fun onSuccess() {
                 val bitmap = (image.drawable as BitmapDrawable).bitmap
-                Palette.from(bitmap).generate { palette -> applyPalette(palette) }
+                Palette.from(bitmap).generate { palette -> applyPalette(palette!!) }
             }
 
             override fun onError() {}
@@ -159,24 +159,24 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     private fun getLocalBitmapUri(): Uri? {
-        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), context.getString(R.string.default_image_name))
+        val file = File(context!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES), context!!.getString(R.string.default_image_name))
         FileOutputStream(file).use {
             val bmp = (image.drawable as BitmapDrawable).bitmap
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, it)
-            return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file)
+            return FileProvider.getUriForFile(context!!, BuildConfig.APPLICATION_ID + ".provider", file)
         }
     }
 
     override fun showSaveFavourite() {
-        Toast.makeText(context, resources.getString(R.string.saved_game), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context!!, resources.getString(R.string.saved_game), Toast.LENGTH_SHORT).show()
     }
 
     override fun showFavouriteAlreadyExists() {
-        Toast.makeText(context, resources.getString(R.string.favourite_already_exists), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context!!, resources.getString(R.string.favourite_already_exists), Toast.LENGTH_SHORT).show()
     }
 
     override fun showGeneralError() {
-        Toast.makeText(context, resources.getString(R.string.unknown_error), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context!!, resources.getString(R.string.unknown_error), Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
@@ -189,7 +189,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
     @SuppressLint("NewApi")
     override fun resetStatusBarColor() {
         isLollipopOrAbove {
-            activity.window.statusBarColor = ContextCompat.getColor(context, R.color.colorPrimaryDark)
+            activity!!.window.statusBarColor = ContextCompat.getColor(context!!, R.color.colorPrimaryDark)
         }
     }
 }

@@ -23,9 +23,7 @@ class GameListAdapter(private val gameList: MutableList<GameViewModel>,
         notifyDataSetChanged()
     }
 
-    fun clearGames() {
-        gameList.clear()
-    }
+    fun clearGames() = gameList.clear()
 
     class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(game: GameViewModel, listener: GameListener) = with(itemView) {

@@ -8,7 +8,7 @@ interface FavouriteDao {
     @Query("SELECT * FROM favourite")
     fun getFavourites(): List<Favourite>
 
-    @Query("SELECT * FROM favourite WHERE id=:arg0")
+    @Query("SELECT * FROM favourite WHERE id=:id")
     fun getFavourite(id: String): Favourite?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

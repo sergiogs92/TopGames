@@ -13,9 +13,10 @@ class GetGames(private val gameRepository: GameRepository) {
         return games.map { gameList: GameList? ->
             val items = gameList?.results ?: emptyList()
             items.map {
-                val description = condition({ it.description.isNullOrBlank() }, { "No description" }, { it.description!! })
+                val description =  if(it.description.isNullOrBlank()) "No description" else it.description!!
                 GameViewModel(it.id, description, it.name, it.image.url)
             }
         }
     }
+
 }

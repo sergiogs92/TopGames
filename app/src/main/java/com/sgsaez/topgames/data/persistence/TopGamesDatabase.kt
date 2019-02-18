@@ -9,7 +9,7 @@ import com.sgsaez.topgames.data.persistence.entities.Favourite
 import com.sgsaez.topgames.data.persistence.entities.Game
 import com.sgsaez.topgames.data.persistence.typeconverters.GameConverter
 
-@Database(entities = arrayOf(Game::class, Favourite::class), version = 1)
+@Database(entities = [Game::class, Favourite::class], version = 1)
 @TypeConverters(GameConverter::class)
 abstract class TopGamesDatabase : RoomDatabase() {
     abstract fun gameDao(): GameDao

@@ -47,13 +47,13 @@ class GameListFragment : Fragment(), GameListView {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_game_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_game_list, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        query = arguments.getString(QUERY_KEY)
+        query = arguments?.getString(QUERY_KEY)!!
         initToolbar()
         initSwipeLayout()
         initAdapter()
@@ -79,7 +79,7 @@ class GameListFragment : Fragment(), GameListView {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> fragmentManager.popBackStack();
+            android.R.id.home -> fragmentManager!!.popBackStack();
             R.id.game_list_source_setting -> presenter.onFavouritesClicked()
             else -> super.onOptionsItemSelected(item)
         }
@@ -105,7 +105,7 @@ class GameListFragment : Fragment(), GameListView {
 
     private fun initSwipeLayout() = swipeRefreshLayout.apply {
         setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
-        setOnRefreshListener({ presenter.onLoadGames(query, isRefresh = true) })
+        setOnRefreshListener { presenter.onLoadGames(query, isRefresh = true) }
     }
 
     private fun initAdapter() = recyclerView.apply {
@@ -115,9 +115,9 @@ class GameListFragment : Fragment(), GameListView {
         adapter = gameListAdapter
         if (query.isEmpty()) {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.itemCount
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val visibleItemCount = layoutManager!!.childCount
+                    val totalItemCount = layoutManager!!.itemCount
                     val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                     presenter.onScrollChanged(visibleItemCount, totalItemCount, firstVisibleItemPosition)
                 }
@@ -148,9 +148,9 @@ class GameListFragment : Fragment(), GameListView {
 
                 override fun onQueryTextChange(s: String): Boolean = false
             })
-            setOnQueryTextFocusChangeListener({ _, hasFocus ->
+            setOnQueryTextFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) isIconified = true
-            })
+            }
         }
     }
 

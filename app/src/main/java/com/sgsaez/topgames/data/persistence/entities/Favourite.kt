@@ -1,6 +1,7 @@
 package com.sgsaez.topgames.data.persistence.entities
 
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 
 @Entity
@@ -10,5 +11,6 @@ data class Favourite(
         var description: String,
         var image: Image) {
 
+    @Ignore
     constructor() : this("", "", "", Image(""))
 }

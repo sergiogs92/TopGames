@@ -11,7 +11,7 @@ interface GameDao {
     @Query("SELECT * FROM game")
     fun getGames(): List<Game>
 
-    @Query("SELECT * FROM game WHERE name LIKE :arg0")
+    @Query("SELECT * FROM game WHERE name LIKE :search")
     fun searchGames(search: String): List<Game>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

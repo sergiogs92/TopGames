@@ -14,7 +14,7 @@ fun ViewGroup.inflate(layoutRes: Int): View =
         LayoutInflater.from(context).inflate(layoutRes, this, false)
 
 val Fragment.topGamesApplication: TopGamesApplication
-    get() = activity.application as TopGamesApplication
+    get() = activity!!.application as TopGamesApplication
 
 fun ImageView.loadUrl(url: String) {
     Picasso.with(context).load(url).into(this)

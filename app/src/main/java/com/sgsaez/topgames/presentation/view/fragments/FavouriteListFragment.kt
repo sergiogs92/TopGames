@@ -15,11 +15,13 @@ import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
 import com.sgsaez.topgames.presentation.view.FavouriteListView
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.presentation.view.adapters.FavouriteListAdapter
-import com.sgsaez.topgames.utils.condition
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_favourite_list.*
 
 fun newFavouriteListInstance() = FavouriteListFragment()
+
+private const val PORTRAIT_NUM_COLUMNS = 3
+private const val LANDSCAPE_NUM_COLUMNS = 5
 
 class FavouriteListFragment : Fragment(), FavouriteListView {
 
@@ -37,25 +39,23 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
         })
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_favourite_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_favourite_list, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
         initAdapter()
         presenter.attachView(this)
-        if (favouriteListAdapter.itemCount == 0) {
-            presenter.onLoadFavourites()
-        }
+        if (favouriteListAdapter.itemCount == 0) presenter.onLoadFavourites()
     }
 
     private fun initToolbar() {
         listToolbar.apply {
             title = resources.getString(R.string.favourites)
             setNavigationIcon(R.drawable.ic_action_back)
-            setNavigationOnClickListener { activity.onBackPressed() }
+            setNavigationOnClickListener { activity!!.onBackPressed() }
         }
     }
 
@@ -67,7 +67,8 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
     private fun initAdapter() = recyclerView.apply {
         setHasFixedSize(true)
         val orientation = resources.configuration.orientation
-        layoutManager = GridLayoutManager(context, condition({ orientation == Configuration.ORIENTATION_PORTRAIT }, { 3 }, { 5 }))
+        val numColumns = if(orientation == Configuration.ORIENTATION_PORTRAIT ) PORTRAIT_NUM_COLUMNS else LANDSCAPE_NUM_COLUMNS
+        layoutManager = GridLayoutManager(context, numColumns)
         adapter = favouriteListAdapter
     }
 
