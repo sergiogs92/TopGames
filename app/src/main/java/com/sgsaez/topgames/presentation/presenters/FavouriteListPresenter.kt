@@ -12,7 +12,7 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites, private v
                              private val schedulerProvider: SchedulerProvider) : BasePresenter<FavouriteListView>() {
 
     fun onLoadFavourites() {
-        compositeDisposable.add(getFavourites.execute()
+        addDisposable(getFavourites.execute()
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe({ favourites ->
@@ -31,7 +31,7 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites, private v
     }
 
     fun onRemoveFavouriteGame(favourite: GameViewModel) {
-        compositeDisposable.add(removeFavourite.execute(favourite)
+        addDisposable(removeFavourite.execute(favourite)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe { _ ->

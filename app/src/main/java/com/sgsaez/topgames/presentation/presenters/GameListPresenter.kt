@@ -18,7 +18,7 @@ class GameListPresenter(private val getGames: GetGames, private val schedulerPro
     fun onLoadGames(query: String, isRefresh: Boolean = false) {
         loading = true
         if (isRefresh) initValue = 0
-        compositeDisposable.add(getGames.execute(initValue.toString(), query)
+        addDisposable(getGames.execute(initValue.toString(), query)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe({ games ->

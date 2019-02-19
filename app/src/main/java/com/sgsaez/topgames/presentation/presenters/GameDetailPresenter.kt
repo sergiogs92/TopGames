@@ -28,7 +28,7 @@ class GameDetailPresenter(private val addFavourite: AddFavourite, private val sc
     }
 
     fun onSaveFavouriteGame(game: GameViewModel) {
-        compositeDisposable.add(addFavourite.execute(game)
+        addDisposable(addFavourite.execute(game)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
                 .subscribe({ _ ->
