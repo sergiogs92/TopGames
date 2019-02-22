@@ -36,9 +36,9 @@ private const val TYPE_IMAGE = "image/*"
 private const val FAVOURITE_KEY: String = "FAVOURITE_KEY"
 private const val GAME_KEY: String = "GAME_KEY"
 
-fun newGameDetailInstance(game: GameViewModel, isFavourite: Boolean): GameDetailFragment =
+fun newGameDetailInstance(game: GameViewModel, showFavourite: Boolean): GameDetailFragment =
         withBundle(GameDetailFragment()) {
-            putBoolean(FAVOURITE_KEY, isFavourite)
+            putBoolean(FAVOURITE_KEY, showFavourite)
             putParcelable(GAME_KEY, game)
         }
 
@@ -180,10 +180,14 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     override fun onDestroyView() {
-        presenter.disposeComposite()
+        super.onDestroyView()
         presenter.onResetStatusBarColor()
         presenter.detachView()
-        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.disposeComposite()
     }
 
     @SuppressLint("NewApi")

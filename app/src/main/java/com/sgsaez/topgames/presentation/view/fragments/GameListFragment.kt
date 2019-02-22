@@ -4,9 +4,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.view.*
 import android.widget.Toast
@@ -16,7 +13,7 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
-import com.sgsaez.topgames.presentation.view.adapters.GameListAdapter
+import com.sgsaez.topgames.presentation.view.adapters.GameListRenderer
 import com.sgsaez.topgames.utils.condition
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_game_list.*
@@ -32,15 +29,9 @@ fun newGameListInstance(query: String): GameListFragment = GameListFragment().ap
 class GameListFragment : Fragment(), GameListView {
 
     private val presenter: GameListPresenter by lazy { component.presenter() }
+    private lateinit var renderer: GameListRenderer
     private val component by lazy { topGamesApplication.component.plus(GameListFragmentModule()) }
     private var query: String = ""
-    private val gameListAdapter by lazy {
-        GameListAdapter(mutableListOf(), object : GameListAdapter.GameListener {
-            override fun onClickInGame(game: GameViewModel) {
-                presenter.onGameClicked(game)
-            }
-        })
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,17 +47,16 @@ class GameListFragment : Fragment(), GameListView {
         query = arguments?.getString(QUERY_KEY)!!
         initToolbar()
         initSwipeLayout()
-        initAdapter()
+        initRenderer()
         presenter.attachView(this)
-        if (gameListAdapter.itemCount == 0) {
-            showLoading()
-            presenter.onLoadGames(query, true)
-        }
+        showLoading()
+        presenter.onLoadGames(0, query)
     }
+
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        initAdapter()
+        initRenderer()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -75,6 +65,28 @@ class GameListFragment : Fragment(), GameListView {
             initMenu(menu)
         }
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun initMenu(menu: Menu?) {
+        val searchItem = menu!!.findItem(R.id.game_list_searchView)
+        val searchView = searchItem.actionView as SearchView
+        searchView.apply {
+            setIconifiedByDefault(true)
+            queryHint = resources.getString(R.string.search_game)
+            maxWidth = Integer.MAX_VALUE
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(queryText: String): Boolean {
+                    clearFocus()
+                    presenter.onSearchClicked(queryText)
+                    return true
+                }
+
+                override fun onQueryTextChange(s: String): Boolean = false
+            })
+            setOnQueryTextFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) isIconified = true
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -103,55 +115,21 @@ class GameListFragment : Fragment(), GameListView {
         }
     }
 
-    private fun initSwipeLayout() = swipeRefreshLayout.apply {
-        setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
-        setOnRefreshListener { presenter.onLoadGames(query, isRefresh = true) }
-    }
-
-    private fun initAdapter() = recyclerView.apply {
-        setHasFixedSize(true)
-        val spanCount = getColumnsNumber()
-        layoutManager = GridLayoutManager(context, spanCount)
-        adapter = gameListAdapter
-        if (query.isEmpty()) {
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val visibleItemCount = layoutManager!!.childCount
-                    val totalItemCount = layoutManager!!.itemCount
-                    val firstVisibleItemPosition = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                    presenter.onScrollChanged(visibleItemCount, totalItemCount, firstVisibleItemPosition)
-                }
-            })
+    private fun initSwipeLayout() {
+        swipeRefreshLayout.apply {
+            setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
+            if(query.isEmpty()) setOnRefreshListener { presenter.onLoadGames(0, query, isRefresh = true) }
         }
+
     }
 
-    private fun getColumnsNumber(): Int {
-        val orientation = resources.configuration.orientation
-        val portraitColumns = resources.getInteger(R.integer.portrait_columns)
-        val landscapeColumns = resources.getInteger(R.integer.landscape_columns)
-        return if (orientation == Configuration.ORIENTATION_PORTRAIT) portraitColumns else landscapeColumns
-    }
+    private fun initRenderer(){
+        renderer = GameListRenderer(recyclerView, object: GameListRenderer.GameListener{
+            override fun onLoadMore(requestPage: Int) = presenter.onLoadMore(requestPage)
 
-    private fun initMenu(menu: Menu?) {
-        val searchItem = menu!!.findItem(R.id.game_list_searchView)
-        val searchView = searchItem.actionView as SearchView
-        searchView.apply {
-            setIconifiedByDefault(true)
-            queryHint = resources.getString(R.string.search_game)
-            maxWidth = Integer.MAX_VALUE
-            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(queryText: String): Boolean {
-                    clearFocus()
-                    presenter.onSearchClicked(queryText)
-                    return true
-                }
+            override fun onClickInGame(game: GameViewModel) = presenter.onGameClicked(game)
 
-                override fun onQueryTextChange(s: String): Boolean = false
-            })
-            setOnQueryTextFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) isIconified = true
-            }
-        }
+        })
     }
 
     override fun showLoading() {
@@ -162,9 +140,8 @@ class GameListFragment : Fragment(), GameListView {
         swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun addGameToList(games: List<GameViewModel>) {
-        val adapter = recyclerView.adapter as GameListAdapter
-        adapter.addGames(games)
+    override fun addGameToList(isQuery: Boolean, games: List<GameViewModel>) {
+        renderer.render(isQuery, games)
     }
 
     override fun showNoDataFoundError() {
@@ -180,7 +157,7 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     override fun clearList() {
-        gameListAdapter.clearGames()
+        renderer.clearGames()
     }
 
     override fun navigateToGame(game: GameViewModel) {
@@ -199,8 +176,13 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     override fun onDestroyView() {
-        presenter.disposeComposite()
-        presenter.detachView()
         super.onDestroyView()
+        presenter.detachView()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.disposeComposite()
+    }
+
 }

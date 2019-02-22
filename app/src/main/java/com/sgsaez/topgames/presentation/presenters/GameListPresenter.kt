@@ -7,32 +7,23 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.utils.SchedulerProvider
 
-private const val INCREMENT = 20
-private const val LAST_VALUE = 100
-
 class GameListPresenter(private val getGames: GetGames, private val schedulerProvider: SchedulerProvider) : BasePresenter<GameListView>() {
 
-    private var initValue = 0
-    private var loading = false
-
-    fun onLoadGames(query: String, isRefresh: Boolean = false) {
-        loading = true
-        if (isRefresh) initValue = 0
+    fun onLoadGames(initValue:Int = 0, query: String = "", isRefresh: Boolean = false) {
         addDisposable(getGames.execute(initValue.toString(), query)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
-                .subscribe({ onCompleteGetGames(isRefresh, it) }, { it.toGetGamesThrowable() }))
+                .subscribe({ onCompleteGetGames(query.isNotEmpty(), isRefresh, it) }, { it.toGetGamesThrowable() }))
     }
 
-    private fun onCompleteGetGames(isRefresh: Boolean, games: List<GameViewModel>) {
-        hideLoading()
+    private fun onCompleteGetGames(isQuery: Boolean, isRefresh: Boolean, games: List<GameViewModel>) {
+        view?.hideLoading()
         if (isRefresh) view?.clearList()
-        view?.addGameToList(games)
-        initValue += initValue.plus(INCREMENT)
+        view?.addGameToList(isQuery, games)
     }
 
     private fun Throwable.toGetGamesThrowable(): Unit? {
-        hideLoading()
+        view?.hideLoading()
         return when {
             this is GamesException -> when (error) {
                 GameError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
@@ -40,24 +31,6 @@ class GameListPresenter(private val getGames: GetGames, private val schedulerPro
                 else -> view?.showDefaultError()
             }
             else -> view?.showDefaultError()
-        }
-    }
-
-    private fun hideLoading(){
-        loading = false
-        view?.hideLoading()
-    }
-
-    fun onScrollChanged(visibleItemCount: Int, totalItemCount: Int, firstVisibleItemPosition: Int) {
-        when {
-            loading && initValue <= LAST_VALUE -> view?.showLoading()
-            !loading && initValue <= LAST_VALUE -> checkLoadGame(visibleItemCount, firstVisibleItemPosition, totalItemCount)
-        }
-    }
-
-    private fun checkLoadGame(visibleItemCount: Int, firstVisibleItemPosition: Int, totalItemCount: Int) {
-        if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0) {
-            onLoadGames("")
         }
     }
 
@@ -71,6 +44,10 @@ class GameListPresenter(private val getGames: GetGames, private val schedulerPro
 
     fun onFavouritesClicked() {
         view?.navigateToFavourites()
+    }
+
+    fun onLoadMore(requestPage: Int) {
+        onLoadGames(requestPage)
     }
 
 }

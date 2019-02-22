@@ -14,4 +14,5 @@
     <string name="favourites">Favourites</string>
     <string name="favourite_already_exists">This game has already been saved</string>
     <string name="unknown_error">There was a problem. Try again to later</string>
+    <string name="load_more">Load more</string>
 </resources>

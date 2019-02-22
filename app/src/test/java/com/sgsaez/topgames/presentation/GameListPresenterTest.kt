@@ -44,7 +44,7 @@ class GameListPresenterTest {
 
         `when`(mockGetGames.execute("0", "")).thenReturn(single)
         gameListPresenter.attachView(mockView)
-        gameListPresenter.onLoadGames("")
+        gameListPresenter.onLoadGames()
         testScheduler.triggerActions()
 
         Mockito.verify(mockView).hideLoading()
@@ -59,10 +59,10 @@ class GameListPresenterTest {
 
         `when`(mockGetGames.execute("0", "")).thenReturn(single)
         gameListPresenter.attachView(mockView)
-        gameListPresenter.onLoadGames("")
+        gameListPresenter.onLoadGames()
         testScheduler.triggerActions()
 
-        Mockito.verify(mockView).addGameToList(games)
+        Mockito.verify(mockView).addGameToList(false, games)
         Mockito.verify(mockView).hideLoading()
     }
 

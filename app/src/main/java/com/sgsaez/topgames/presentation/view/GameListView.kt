@@ -5,7 +5,7 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 interface GameListView {
     fun showLoading()
     fun hideLoading()
-    fun addGameToList(games: List<GameViewModel>)
+    fun addGameToList(isQuery: Boolean, games: List<GameViewModel>)
     fun showNoDataFoundError()
     fun showInternetConnectionError()
     fun showDefaultError()
