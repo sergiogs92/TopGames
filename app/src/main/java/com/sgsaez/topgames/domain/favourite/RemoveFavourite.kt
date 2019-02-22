@@ -8,7 +8,7 @@ import io.reactivex.Single
 
 class RemoveFavourite(private val favouriteRepository: FavouriteRepository) {
 
-    fun execute(favouriteGame: GameViewModel): Single<Unit> {
-        return favouriteRepository.removeFavorite(favouriteGame.let { Favourite(it.id, it.name, it.description, Image(it.imageUrl)) })
-    }
+    fun execute(favouriteGame: GameViewModel): Single<Unit> =
+            favouriteRepository.removeFavorite(favouriteGame.let { Favourite(it.id, it.name, it.description, Image(it.imageUrl)) })
+
 }

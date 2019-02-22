@@ -15,15 +15,17 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites, private v
         addDisposable(getFavourites.execute()
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
-                .subscribe({ favourites ->
-                    view?.addFavouriteToList(favourites)
-                }, {
-                    val favouritesException = it as FavouritesException
-                    when (favouritesException.error) {
-                        FavoriteError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
-                        else -> view?.showNoDataFoundError()
-                    }
-                }))
+                .subscribe({ view?.addFavouriteToList(it) }, { it.toGetFavouritesThrowable() }))
+    }
+
+    private fun Throwable.toGetFavouritesThrowable(): Unit? {
+        return when {
+            this is FavouritesException -> when (error) {
+                FavoriteError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
+                else -> view?.showNoDataFoundError()
+            }
+            else -> view?.showNoDataFoundError()
+        }
     }
 
     fun onFavouriteClicked(favourite: GameViewModel) {
@@ -34,9 +36,7 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites, private v
         addDisposable(removeFavourite.execute(favourite)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
-                .subscribe { _ ->
-                    view?.removeFavouriteToList(favourite)
-                })
+                .subscribe { _ -> view?.removeFavouriteToList(favourite) })
     }
 
 }

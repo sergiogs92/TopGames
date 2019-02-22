@@ -31,15 +31,17 @@ class GameDetailPresenter(private val addFavourite: AddFavourite, private val sc
         addDisposable(addFavourite.execute(game)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
-                .subscribe({ _ ->
-                    view?.showSaveFavourite()
-                }, {
-                    val favouritesException = it as FavouritesException
-                    when (favouritesException.error) {
-                        FavoriteError.FAVOURITE_ALREADY_EXITS -> view?.showFavouriteAlreadyExists()
-                        else -> view?.showGeneralError()
-                    }
-                }))
+                .subscribe({ view?.showSaveFavourite() }, { it.toSaveFavouritesThrowable() }))
+    }
+
+    private fun Throwable.toSaveFavouritesThrowable(): Unit? {
+        return when {
+            this is FavouritesException -> when (error) {
+                FavoriteError.FAVOURITE_ALREADY_EXITS -> view?.showFavouriteAlreadyExists()
+                else -> view?.showGeneralError()
+            }
+            else -> view?.showGeneralError()
+        }
     }
 
 }

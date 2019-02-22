@@ -9,6 +9,8 @@ import io.reactivex.Single
 class AddFavourite(private val favouriteRepository: FavouriteRepository) {
 
     fun execute(favouriteGame: GameViewModel): Single<Unit> {
-        return favouriteRepository.addFavorite(Favourite(favouriteGame.id, favouriteGame.name, favouriteGame.description, Image(favouriteGame.imageUrl)))
+        val favourite = Favourite(favouriteGame.id, favouriteGame.name, favouriteGame.description, Image(favouriteGame.imageUrl))
+        return favouriteRepository.addFavorite(favourite)
     }
+
 }

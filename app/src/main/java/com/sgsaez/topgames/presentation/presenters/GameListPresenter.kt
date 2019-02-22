@@ -21,22 +21,31 @@ class GameListPresenter(private val getGames: GetGames, private val schedulerPro
         addDisposable(getGames.execute(initValue.toString(), query)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
-                .subscribe({ games ->
-                    loading = false
-                    view?.hideLoading()
-                    if (isRefresh) view?.clearList()
-                    view?.addGameToList(games)
-                    initValue += initValue.plus(INCREMENT)
-                }, {
-                    loading = false
-                    view?.hideLoading()
-                    val gamesException = it as GamesException
-                    when (gamesException.error) {
-                        GameError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
-                        GameError.ERROR_INTERNET_CONNECTION -> view?.showInternetConnectionError()
-                        else -> view?.showDefaultError()
-                    }
-                }))
+                .subscribe({ onCompleteGetGames(isRefresh, it) }, { it.toGetGamesThrowable() }))
+    }
+
+    private fun onCompleteGetGames(isRefresh: Boolean, games: List<GameViewModel>) {
+        hideLoading()
+        if (isRefresh) view?.clearList()
+        view?.addGameToList(games)
+        initValue += initValue.plus(INCREMENT)
+    }
+
+    private fun Throwable.toGetGamesThrowable(): Unit? {
+        hideLoading()
+        return when {
+            this is GamesException -> when (error) {
+                GameError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
+                GameError.ERROR_INTERNET_CONNECTION -> view?.showInternetConnectionError()
+                else -> view?.showDefaultError()
+            }
+            else -> view?.showDefaultError()
+        }
+    }
+
+    private fun hideLoading(){
+        loading = false
+        view?.hideLoading()
     }
 
     fun onScrollChanged(visibleItemCount: Int, totalItemCount: Int, firstVisibleItemPosition: Int) {
