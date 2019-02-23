@@ -17,7 +17,7 @@
             app:expandedTitleTextAppearance="@style/HeaderTitleStyle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <com.sgsaez.topgames.utils.widgets.SquareImageView
+            <com.sgsaez.topgames.utils.custom.SquareImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

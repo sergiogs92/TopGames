@@ -150,7 +150,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, textShared)
             type = TYPE_TEXT
-            if (bmpUri != null) {
+            bmpUri?.let{
                 putExtra(Intent.EXTRA_STREAM, bmpUri)
                 type = TYPE_IMAGE
             }

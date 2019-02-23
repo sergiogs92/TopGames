@@ -12,9 +12,9 @@ import com.sgsaez.topgames.di.modules.GameListFragmentModule
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
-import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.presentation.view.adapters.GameListRenderer
 import com.sgsaez.topgames.utils.condition
+import com.sgsaez.topgames.utils.navigation.navigateTo
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_game_list.*
 
@@ -52,7 +52,6 @@ class GameListFragment : Fragment(), GameListView {
         showLoading()
         presenter.onLoadGames(0, query)
     }
-
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
@@ -162,17 +161,17 @@ class GameListFragment : Fragment(), GameListView {
 
     override fun navigateToGame(game: GameViewModel) {
         val detailsFragment = newGameDetailInstance(game, false)
-        (activity as MainActivity).addFragment(detailsFragment)
+        navigateTo(activity!!, detailsFragment)
     }
 
     override fun navigateToGameList(query: String) {
         val gameListFragment = newGameListInstance(query)
-        (activity as MainActivity).addFragment(gameListFragment)
+        navigateTo(activity!!, gameListFragment)
     }
 
     override fun navigateToFavourites() {
         val favouriteListFragment = newFavouriteListInstance()
-        (activity as MainActivity).addFragment(favouriteListFragment)
+        navigateTo(activity!!, favouriteListFragment)
     }
 
     override fun onDestroyView() {

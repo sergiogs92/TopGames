@@ -13,8 +13,8 @@ import com.sgsaez.topgames.di.modules.FavouriteListFragmentModule
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
 import com.sgsaez.topgames.presentation.view.FavouriteListView
-import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.presentation.view.adapters.FavouriteListAdapter
+import com.sgsaez.topgames.utils.navigation.navigateTo
 import com.sgsaez.topgames.utils.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_favourite_list.*
 
@@ -87,7 +87,7 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
 
     override fun navigateToGame(favouriteGame: GameViewModel) {
         val detailsFragment = newGameDetailInstance(favouriteGame, true)
-        (activity as MainActivity).addFragment(detailsFragment)
+        navigateTo(activity!!, detailsFragment)
     }
 
     override fun onDestroyView() {
