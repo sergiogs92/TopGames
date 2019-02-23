@@ -13,9 +13,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val newGameListFragment = newGameListInstance("")
-        navigateTo(this, newGameListFragment)
+        navigateTo(newGameListFragment)
     }
 
-    override fun onBackPressed() = navigateBack(this)
+    override fun onBackPressed() = navigateBack()
 
 }

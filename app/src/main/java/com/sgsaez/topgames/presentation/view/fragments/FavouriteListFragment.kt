@@ -87,7 +87,7 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
 
     override fun navigateToGame(favouriteGame: GameViewModel) {
         val detailsFragment = newGameDetailInstance(favouriteGame, true)
-        navigateTo(activity!!, detailsFragment)
+        activity!!.navigateTo(detailsFragment)
     }
 
     override fun onDestroyView() {
