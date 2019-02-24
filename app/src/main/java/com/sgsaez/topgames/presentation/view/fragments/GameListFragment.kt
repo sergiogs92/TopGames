@@ -47,12 +47,12 @@ class GameListFragment : Fragment(), GameListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val query = arguments?.getString(QUERY_KEY)
-        page = page.update(Page(page.requestedPage, page.items, query ?: ""))
+        page = page.update(Page(requestedPage = page.requestedPage, query = query ?: ""))
         presenter.attachView(this)
         initToolbar()
         initSwipeLayout()
         initRenderer()
-        paintGames()
+        paintGames(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -120,7 +120,8 @@ class GameListFragment : Fragment(), GameListView {
     private fun initSwipeLayout() {
         swipeRefreshLayout.apply {
             setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
-            if (page.query.isEmpty()) setOnRefreshListener {
+            if (page.query.isEmpty())
+                setOnRefreshListener {
                 page = Page()
                 presenter.onLoadGames(page, isRefresh = true)
             }
@@ -130,8 +131,7 @@ class GameListFragment : Fragment(), GameListView {
     private fun initRenderer() {
         renderer = GameListRenderer(recyclerView, object : GameListRenderer.GameListener {
             override fun onLoadMore(requestPage: Int) {
-                page = page.update(Page(requestedPage = page.requestedPage + 1, query = page.query))
-                presenter.onLoadMore(page.requestedPage)
+                presenter.onLoadMore(page.requestedPage + 1)
             }
 
             override fun onClickInGame(game: GameViewModel) = presenter.onGameClicked(game)
@@ -139,11 +139,13 @@ class GameListFragment : Fragment(), GameListView {
         })
     }
 
-    private fun paintGames() {
+    private fun paintGames(isNewConfiguration: Boolean) {
         if (page.items.isEmpty() || page.query.isNotEmpty()) {
             showLoading()
             presenter.onLoadGames(Page(query = page.query))
-        } else addGameToList(isQuery = page.query.isNotEmpty(), games = page.items)
+        } else{
+            addGameToList(isConfigurationChanged = isNewConfiguration, isQuery = page.query.isNotEmpty(), games = page.items)
+        }
     }
 
     override fun showLoading() {
@@ -154,8 +156,8 @@ class GameListFragment : Fragment(), GameListView {
         swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun addGameToList(isConfigurationChanged:Boolean, isQuery: Boolean, games: List<GameViewModel>) {
-        page = if(isConfigurationChanged) page else page.update(Page(page.requestedPage, games, page.query))
+    override fun addGameToList(isConfigurationChanged: Boolean, isQuery: Boolean, games: List<GameViewModel>) {
+        page = if (isConfigurationChanged) page else page.update(Page(page.requestedPage + 1, games, page.query))
         renderer.render(page)
     }
 

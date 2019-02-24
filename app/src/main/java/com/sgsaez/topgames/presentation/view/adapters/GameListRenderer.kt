@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.game_item.*
 
 private enum class GameState { DEFAULT, LOAD_MORE }
 
-private const val MAX_REQUEST_PAGE = 2
+private const val MAX_REQUEST_PAGE = 3
 
 class GameListRenderer(private val recyclerView: RecyclerView, private val listener: GameListener) {
 
@@ -55,7 +55,6 @@ class GameListRenderer(private val recyclerView: RecyclerView, private val liste
 
     fun clearGames() {
         gameList = ArrayList()
-        requestPage = 0
         shouldLoadMore = true
         recyclerView.adapter!!.notifyDataSetChanged()
     }
