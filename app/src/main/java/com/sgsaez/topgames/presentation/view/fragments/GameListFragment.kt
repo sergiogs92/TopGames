@@ -130,9 +130,7 @@ class GameListFragment : Fragment(), GameListView {
 
     private fun initRenderer() {
         renderer = GameListRenderer(recyclerView, object : GameListRenderer.GameListener {
-            override fun onLoadMore(requestPage: Int) {
-                presenter.onLoadMore(page.requestedPage + 1)
-            }
+            override fun onLoadMore(requestPage: Int) = presenter.onLoadMore(requestPage)
 
             override fun onClickInGame(game: GameViewModel) = presenter.onGameClicked(game)
 
