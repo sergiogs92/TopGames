@@ -5,8 +5,8 @@ import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
 import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameDetailView
-import com.sgsaez.topgames.utils.SchedulerProvider
-import com.sgsaez.topgames.utils.fromHtml
+import com.sgsaez.topgames.support.SchedulerProvider
+import com.sgsaez.topgames.support.fromHtml
 
 class GameDetailPresenter(private val addFavourite: AddFavourite, private val schedulerProvider: SchedulerProvider) :
         BasePresenter<GameDetailView>() {

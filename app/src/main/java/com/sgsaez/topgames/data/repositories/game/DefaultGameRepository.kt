@@ -6,7 +6,7 @@ import com.sgsaez.topgames.data.persistence.daos.GameDao
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.domain.game.GameError
 import com.sgsaez.topgames.domain.game.GamesException
-import com.sgsaez.topgames.utils.condition
+import com.sgsaez.topgames.support.condition
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 

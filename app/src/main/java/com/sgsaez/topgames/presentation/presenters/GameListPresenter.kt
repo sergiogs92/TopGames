@@ -5,21 +5,22 @@ import com.sgsaez.topgames.domain.game.GamesException
 import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameListView
-import com.sgsaez.topgames.utils.SchedulerProvider
+import com.sgsaez.topgames.support.SchedulerProvider
+import com.sgsaez.topgames.support.domains.Page
 
 class GameListPresenter(private val getGames: GetGames, private val schedulerProvider: SchedulerProvider) : BasePresenter<GameListView>() {
 
-    fun onLoadGames(initValue:Int = 0, query: String = "", isRefresh: Boolean = false) {
-        addDisposable(getGames.execute(initValue.toString(), query)
+    fun onLoadGames(page: Page<GameViewModel>, isRefresh: Boolean = false) {
+        addDisposable(getGames.execute(page.requestedPage.toString(), page.query)
                 .subscribeOn(schedulerProvider.ioScheduler())
                 .observeOn(schedulerProvider.uiScheduler())
-                .subscribe({ onCompleteGetGames(query.isNotEmpty(), isRefresh, it) }, { it.toGetGamesThrowable() }))
+                .subscribe({ onCompleteGetGames(page.query.isNotEmpty(), isRefresh, it) }, { it.toGetGamesThrowable() }))
     }
 
     private fun onCompleteGetGames(isQuery: Boolean, isRefresh: Boolean, games: List<GameViewModel>) {
         view?.hideLoading()
         if (isRefresh) view?.clearList()
-        view?.addGameToList(isQuery, games)
+        view?.addGameToList(isQuery = isQuery, games = games)
     }
 
     private fun Throwable.toGetGamesThrowable(): Unit? {
@@ -47,7 +48,7 @@ class GameListPresenter(private val getGames: GetGames, private val schedulerPro
     }
 
     fun onLoadMore(requestPage: Int) {
-        onLoadGames(requestPage)
+        onLoadGames(Page(requestedPage = requestPage))
     }
 
 }

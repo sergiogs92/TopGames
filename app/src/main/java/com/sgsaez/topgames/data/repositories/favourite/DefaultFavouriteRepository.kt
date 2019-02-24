@@ -5,7 +5,7 @@ import com.sgsaez.topgames.data.persistence.entities.Favourite
 import com.sgsaez.topgames.data.persistence.entities.FavouriteList
 import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
 import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
-import com.sgsaez.topgames.utils.condition
+import com.sgsaez.topgames.support.condition
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 

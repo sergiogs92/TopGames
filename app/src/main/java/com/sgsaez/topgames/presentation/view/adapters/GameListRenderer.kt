@@ -7,14 +7,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.presentation.model.GameViewModel
-import com.sgsaez.topgames.utils.BaseViewHolder
-import com.sgsaez.topgames.utils.loadUrl
-import com.sgsaez.topgames.utils.renderer.HolderSupport
+import com.sgsaez.topgames.support.BaseViewHolder
+import com.sgsaez.topgames.support.domains.Page
+import com.sgsaez.topgames.support.loadUrl
+import com.sgsaez.topgames.support.renderer.HolderSupport
 import kotlinx.android.synthetic.main.game_item.*
 
 private enum class GameState { DEFAULT, LOAD_MORE }
 
-private const val MAX_REQUEST_PAGE = 3
+private const val MAX_REQUEST_PAGE = 2
 
 class GameListRenderer(private val recyclerView: RecyclerView, private val listener: GameListener) {
 
@@ -41,14 +42,15 @@ class GameListRenderer(private val recyclerView: RecyclerView, private val liste
         recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = gridLayoutManager
+            adapter = GameListRecyclerViewAdapter()
         }
     }
 
-    fun render(isQuery: Boolean, games: List<GameViewModel>) {
-        gameList = gameList + games
-        requestPage += 1
-        if (requestPage == MAX_REQUEST_PAGE || isQuery) shouldLoadMore = false
-        recyclerView.swapAdapter(GameListRecyclerViewAdapter(), false)
+    fun render(page: Page<GameViewModel>) {
+        gameList = page.items
+        requestPage = page.requestedPage
+        if (requestPage == MAX_REQUEST_PAGE || page.query.isNotEmpty()) shouldLoadMore = false
+        recyclerView.adapter!!.notifyDataSetChanged()
     }
 
     fun clearGames() {

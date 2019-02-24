@@ -2,7 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/gameDetailContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -17,7 +18,7 @@
             app:expandedTitleTextAppearance="@style/HeaderTitleStyle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <com.sgsaez.topgames.utils.custom.SquareImageView
+            <com.sgsaez.topgames.support.custom.SquareImageView
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

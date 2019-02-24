@@ -7,7 +7,7 @@ import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
 import com.sgsaez.topgames.presentation.view.FavouriteListView
-import com.sgsaez.topgames.utils.SchedulerProviderTest
+import com.sgsaez.topgames.support.SchedulerProviderTest
 import io.reactivex.Single
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Before

@@ -1,9 +1,9 @@
-package com.sgsaez.topgames.utils.navigation
+package com.sgsaez.topgames.support.navigation
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import com.sgsaez.topgames.R
-import com.sgsaez.topgames.utils.condition
+import com.sgsaez.topgames.support.condition
 
 private const val FIRST_FRAGMENT: Int = 1
 

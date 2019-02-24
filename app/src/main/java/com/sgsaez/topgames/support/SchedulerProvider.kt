@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.utils
+package com.sgsaez.topgames.support
 
 import io.reactivex.Scheduler
 

@@ -4,7 +4,7 @@ import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.domain.favourite.GetFavourites
 import com.sgsaez.topgames.domain.favourite.RemoveFavourite
 import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
-import com.sgsaez.topgames.utils.SchedulerProvider
+import com.sgsaez.topgames.support.SchedulerProvider
 import dagger.Module
 import dagger.Provides
 

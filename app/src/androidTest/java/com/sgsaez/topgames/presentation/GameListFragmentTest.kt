@@ -26,7 +26,7 @@ import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.di.components.DaggerTopGamesApplicationComponentMock
 import com.sgsaez.topgames.di.modules.TopGamesApplicationModuleMock
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
-import com.sgsaez.topgames.utils.RecyclerViewMatcher
+import com.sgsaez.topgames.support.RecyclerViewMatcher
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import org.hamcrest.Matchers.*

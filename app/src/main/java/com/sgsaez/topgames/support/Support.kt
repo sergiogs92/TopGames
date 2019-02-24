@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.utils
+package com.sgsaez.topgames.support
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

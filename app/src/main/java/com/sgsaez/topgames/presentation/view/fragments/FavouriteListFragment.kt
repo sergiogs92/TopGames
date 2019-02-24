@@ -14,8 +14,8 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
 import com.sgsaez.topgames.presentation.view.FavouriteListView
 import com.sgsaez.topgames.presentation.view.adapters.FavouriteListAdapter
-import com.sgsaez.topgames.utils.navigation.navigateTo
-import com.sgsaez.topgames.utils.topGamesApplication
+import com.sgsaez.topgames.support.navigation.navigateTo
+import com.sgsaez.topgames.support.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_favourite_list.*
 
 fun newFavouriteListInstance() = FavouriteListFragment()
@@ -45,9 +45,9 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.attachView(this)
         initToolbar()
         initAdapter()
-        presenter.attachView(this)
         if (favouriteListAdapter.itemCount == 0) presenter.onLoadFavourites()
     }
 

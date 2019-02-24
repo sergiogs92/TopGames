@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.utils.renderer
+package com.sgsaez.topgames.support.renderer
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.utils.custom
+package com.sgsaez.topgames.support.custom
 
 import android.content.Context
 import android.util.AttributeSet

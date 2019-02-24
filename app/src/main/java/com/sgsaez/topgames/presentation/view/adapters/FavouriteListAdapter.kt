@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.presentation.model.GameViewModel
-import com.sgsaez.topgames.utils.inflate
-import com.sgsaez.topgames.utils.loadUrl
+import com.sgsaez.topgames.support.inflate
+import com.sgsaez.topgames.support.loadUrl
 import kotlinx.android.synthetic.main.game_item.view.*
 
 class FavouriteListAdapter(private val favouriteList: MutableList<GameViewModel>,

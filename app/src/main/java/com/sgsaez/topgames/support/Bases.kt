@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.utils
+package com.sgsaez.topgames.support
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

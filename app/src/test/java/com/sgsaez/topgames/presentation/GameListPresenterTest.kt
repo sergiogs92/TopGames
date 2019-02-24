@@ -6,7 +6,8 @@ import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
-import com.sgsaez.topgames.utils.SchedulerProviderTest
+import com.sgsaez.topgames.support.SchedulerProviderTest
+import com.sgsaez.topgames.support.domains.Page
 import io.reactivex.Single
 import io.reactivex.schedulers.TestScheduler
 import org.junit.Before
@@ -38,13 +39,14 @@ class GameListPresenterTest {
 
     @Test
     fun testGetGamesErrorCaseShowError() {
+        val page: Page<GameViewModel> = Page()
         val single: Single<List<GameViewModel>> = Single.create { emitter ->
             emitter.onError(GamesException(GameError.DEFAULT))
         }
 
         `when`(mockGetGames.execute("0", "")).thenReturn(single)
         gameListPresenter.attachView(mockView)
-        gameListPresenter.onLoadGames()
+        gameListPresenter.onLoadGames(page, false)
         testScheduler.triggerActions()
 
         Mockito.verify(mockView).hideLoading()
@@ -59,10 +61,10 @@ class GameListPresenterTest {
 
         `when`(mockGetGames.execute("0", "")).thenReturn(single)
         gameListPresenter.attachView(mockView)
-        gameListPresenter.onLoadGames()
+        gameListPresenter.onLoadGames(Page())
         testScheduler.triggerActions()
 
-        Mockito.verify(mockView).addGameToList(false, games)
+        Mockito.verify(mockView).addGameToList(false, false, games)
         Mockito.verify(mockView).hideLoading()
     }
 

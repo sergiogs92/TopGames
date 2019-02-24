@@ -3,7 +3,6 @@ package com.sgsaez.topgames.domain.game
 import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.presentation.model.GameViewModel
-import com.sgsaez.topgames.utils.condition
 import io.reactivex.Single
 
 class GetGames(private val gameRepository: GameRepository) {

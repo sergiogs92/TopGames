@@ -6,7 +6,7 @@ import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
 import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.FavouriteListView
-import com.sgsaez.topgames.utils.SchedulerProvider
+import com.sgsaez.topgames.support.SchedulerProvider
 
 class FavouriteListPresenter(private val getFavourites: GetFavourites, private val removeFavourite: RemoveFavourite,
                              private val schedulerProvider: SchedulerProvider) : BasePresenter<FavouriteListView>() {

@@ -21,9 +21,9 @@ import com.sgsaez.topgames.di.modules.GameDetailFragmentModule
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
 import com.sgsaez.topgames.presentation.view.GameDetailView
-import com.sgsaez.topgames.utils.isLollipopOrAbove
-import com.sgsaez.topgames.utils.topGamesApplication
-import com.sgsaez.topgames.utils.withBundle
+import com.sgsaez.topgames.support.isLollipopOrAbove
+import com.sgsaez.topgames.support.topGamesApplication
+import com.sgsaez.topgames.support.withBundle
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.description_item.*
@@ -60,9 +60,9 @@ class GameDetailFragment : Fragment(), GameDetailView {
         super.onViewCreated(view, savedInstanceState)
         val isFavourite = arguments?.getBoolean(FAVOURITE_KEY)!!
         val game = arguments?.getParcelable<GameViewModel>(GAME_KEY)!!
+        presenter.attachView(this)
         initToolbar(game, isFavourite)
         initFloatingButton(game)
-        presenter.attachView(this)
         presenter.onInit(game)
     }
 
