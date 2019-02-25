@@ -12,7 +12,7 @@ import com.sgsaez.topgames.di.modules.GameListFragmentModule
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
-import com.sgsaez.topgames.presentation.view.adapters.GameListRenderer
+import com.sgsaez.topgames.presentation.view.renderers.GameListRenderer
 import com.sgsaez.topgames.support.condition
 import com.sgsaez.topgames.support.domains.Page
 import com.sgsaez.topgames.support.domains.update

@@ -1,4 +1,4 @@
-package com.sgsaez.topgames.presentation.view.adapters
+package com.sgsaez.topgames.presentation.view.renderers
 
 import android.content.Context
 import android.content.res.Configuration
@@ -105,12 +105,12 @@ class GameListRenderer(private val recyclerView: RecyclerView, private val liste
 
     private inner class LoadMoreHolder(parent: ViewGroup) : BaseViewHolder(HolderSupport.getView(parent, R.layout.load_more_item))
 
-
     interface GameListener {
 
         fun onClickInGame(game: GameViewModel)
 
         fun onLoadMore(requestPage: Int)
+
     }
 
 }

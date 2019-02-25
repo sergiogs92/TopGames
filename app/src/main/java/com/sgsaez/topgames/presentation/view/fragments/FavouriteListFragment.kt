@@ -3,7 +3,6 @@ package com.sgsaez.topgames.presentation.view.fragments
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,31 +12,18 @@ import com.sgsaez.topgames.di.modules.FavouriteListFragmentModule
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
 import com.sgsaez.topgames.presentation.view.FavouriteListView
-import com.sgsaez.topgames.presentation.view.adapters.FavouriteListAdapter
+import com.sgsaez.topgames.presentation.view.renderers.FavouriteListRenderer
 import com.sgsaez.topgames.support.navigation.navigateTo
 import com.sgsaez.topgames.support.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_favourite_list.*
 
 fun newFavouriteListInstance() = FavouriteListFragment()
 
-private const val PORTRAIT_NUM_COLUMNS = 3
-private const val LANDSCAPE_NUM_COLUMNS = 5
-
 class FavouriteListFragment : Fragment(), FavouriteListView {
 
     private val presenter: FavouriteListPresenter by lazy { component.presenter() }
     private val component by lazy { topGamesApplication.component.plus(FavouriteListFragmentModule()) }
-    private val favouriteListAdapter by lazy {
-        FavouriteListAdapter(mutableListOf(), object : FavouriteListAdapter.FavouriteListener {
-            override fun onClickInGame(favouriteGame: GameViewModel) {
-                presenter.onFavouriteClicked(favouriteGame)
-            }
-
-            override fun onClickInClose(favouriteGame: GameViewModel) {
-                presenter.onRemoveFavouriteGame(favouriteGame)
-            }
-        })
-    }
+    private lateinit var renderer: FavouriteListRenderer
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_favourite_list, container, false)
@@ -47,8 +33,8 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
         super.onViewCreated(view, savedInstanceState)
         presenter.attachView(this)
         initToolbar()
-        initAdapter()
-        if (favouriteListAdapter.itemCount == 0) presenter.onLoadFavourites()
+        initRenderer()
+        paintGames()
     }
 
     private fun initToolbar() {
@@ -59,26 +45,34 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        initAdapter()
+    private fun initRenderer() {
+        renderer = FavouriteListRenderer(recyclerView, object : FavouriteListRenderer.FavouriteListener {
+            override fun onClickInGame(favouriteGame: GameViewModel) {
+                presenter.onFavouriteClicked(favouriteGame)
+            }
+
+            override fun onClickInClose(favouriteGame: GameViewModel) {
+                presenter.onRemoveFavouriteGame(favouriteGame)
+            }
+
+        })
     }
 
-    private fun initAdapter() = recyclerView.apply {
-        setHasFixedSize(true)
-        val orientation = resources.configuration.orientation
-        val numColumns = if(orientation == Configuration.ORIENTATION_PORTRAIT ) PORTRAIT_NUM_COLUMNS else LANDSCAPE_NUM_COLUMNS
-        layoutManager = GridLayoutManager(context, numColumns)
-        adapter = favouriteListAdapter
+    private fun paintGames(){
+        presenter.onLoadFavourites()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        initRenderer()
     }
 
     override fun addFavouriteToList(favouriteGames: List<GameViewModel>) {
-        val adapter = recyclerView.adapter as FavouriteListAdapter
-        adapter.addFavourites(favouriteGames)
+        renderer.render(favouriteGames)
     }
 
     override fun removeFavouriteToList(favouriteGame: GameViewModel) {
-        favouriteListAdapter.removeFavourite(favouriteGame)
+        renderer.removeFavourite(favouriteGame)
     }
 
     override fun showNoDataFoundError() {
