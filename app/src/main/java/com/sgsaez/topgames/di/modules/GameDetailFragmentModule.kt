@@ -11,9 +11,10 @@ import dagger.Provides
 class GameDetailFragmentModule {
 
     @Provides
-    fun provideAddFavourites(favouriteRepository: FavouriteRepository) = AddFavourite(favouriteRepository)
+    fun provideAddFavourites(favouriteRepository: FavouriteRepository, schedulerProvider: SchedulerProvider) =
+            AddFavourite(favouriteRepository, schedulerProvider)
 
     @Provides
-    fun providePresenter(addFavourite: AddFavourite, schedulerProvider: SchedulerProvider) = GameDetailPresenter(addFavourite, schedulerProvider)
+    fun providePresenter(addFavourite: AddFavourite) = GameDetailPresenter(addFavourite)
 
 }

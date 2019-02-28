@@ -2,17 +2,33 @@ package com.sgsaez.topgames.domain.favourite
 
 import com.sgsaez.topgames.data.persistence.entities.FavouriteList
 import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
+import com.sgsaez.topgames.domain.BaseCase
+import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
+import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
-import io.reactivex.Single
+import com.sgsaez.topgames.support.SchedulerProvider
+import com.sgsaez.topgames.support.domains.functional.Either
+import com.sgsaez.topgames.support.domains.functional.fold
 
-class GetFavourites(private val favouriteRepository: FavouriteRepository) {
+class GetFavourites(private val favouriteRepository: FavouriteRepository, schedulerProvider: SchedulerProvider) : BaseCase(schedulerProvider) {
 
-    fun execute(): Single<List<GameViewModel>> {
-        val favouriteGames = favouriteRepository.getFavorites()
-        return favouriteGames.map { favouriteList: FavouriteList? ->
-            val items = favouriteList?.results ?: emptyList()
-            items.map { GameViewModel(it.id, it.description, it.name, it.image.url) }
+    fun execute(onCompleted: (Either<FavouritesException, List<GameViewModel>>) -> Unit) {
+        asyncExecute {
+            val favouriteGames = favouriteRepository.getFavorites()
+            val gamesViewModel = favouriteGames.fold(
+                    { error -> Either.Left(error) },
+                    { favouriteList -> getGameViewModelList(favouriteList) }
+            )
+            uiExecute {
+                onCompleted(gamesViewModel)
+            }
         }
+    }
+
+    private fun getGameViewModelList(games: FavouriteList): Either<FavouritesException, List<GameViewModel>> {
+        val gameViewModelList = games.results.map { GameViewModel(it.id, it.description, it.name, it.image.url) }
+        return if (gameViewModelList.isEmpty()) Either.Left(FavouritesException(FavoriteError.ERROR_NO_DATA_FOUND))
+        else Either.Right(gameViewModelList)
     }
 
 }

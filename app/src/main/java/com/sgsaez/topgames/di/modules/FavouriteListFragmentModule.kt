@@ -12,13 +12,15 @@ import dagger.Provides
 class FavouriteListFragmentModule {
 
     @Provides
-    fun provideGetFavourites(favouriteRepository: FavouriteRepository) = GetFavourites(favouriteRepository)
+    fun provideGetFavourites(favouriteRepository: FavouriteRepository, schedulerProvider: SchedulerProvider) =
+            GetFavourites(favouriteRepository, schedulerProvider)
 
     @Provides
-    fun provideRemoveFavourites(favouriteRepository: FavouriteRepository) = RemoveFavourite(favouriteRepository)
+    fun provideRemoveFavourites(favouriteRepository: FavouriteRepository, schedulerProvider: SchedulerProvider) =
+            RemoveFavourite(favouriteRepository, schedulerProvider)
 
     @Provides
-    fun providePresenter(getFavourites: GetFavourites, removeFavourite: RemoveFavourite, schedulerProvider: SchedulerProvider) =
-            FavouriteListPresenter(getFavourites, removeFavourite, schedulerProvider)
+    fun providePresenter(getFavourites: GetFavourites, removeFavourite: RemoveFavourite) =
+            FavouriteListPresenter(getFavourites, removeFavourite)
 
 }

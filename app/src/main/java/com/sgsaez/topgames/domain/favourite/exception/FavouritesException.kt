@@ -4,5 +4,6 @@ class FavouritesException(val error: FavoriteError, override val message: String
 
 enum class FavoriteError {
     ERROR_NO_DATA_FOUND,
-    FAVOURITE_ALREADY_EXITS
+    FAVOURITE_ALREADY_EXITS,
+    DEFAULT
 }

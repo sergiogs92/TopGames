@@ -150,7 +150,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, textShared)
             type = TYPE_TEXT
-            bmpUri?.let{
+            bmpUri?.let {
                 putExtra(Intent.EXTRA_STREAM, bmpUri)
                 type = TYPE_IMAGE
             }
@@ -185,15 +185,11 @@ class GameDetailFragment : Fragment(), GameDetailView {
         presenter.detachView()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.disposeComposite()
-    }
-
     @SuppressLint("NewApi")
     override fun resetStatusBarColor() {
         isLollipopOrAbove {
             activity!!.window.statusBarColor = ContextCompat.getColor(context!!, R.color.colorPrimaryDark)
         }
     }
+
 }

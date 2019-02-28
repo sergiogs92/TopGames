@@ -2,10 +2,11 @@ package com.sgsaez.topgames.data.repositories.favourite
 
 import com.sgsaez.topgames.data.persistence.entities.Favourite
 import com.sgsaez.topgames.data.persistence.entities.FavouriteList
-import io.reactivex.Single
+import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
+import com.sgsaez.topgames.support.domains.functional.Either
 
 interface FavouriteRepository {
-    fun getFavorites(): Single<FavouriteList>
-    fun addFavorite(favourite: Favourite): Single<Unit>
-    fun removeFavorite(favourite: Favourite): Single<Unit>
+    fun getFavorites(): Either<FavouritesException, FavouriteList>
+    fun addFavorite(favourite: Favourite): Either<FavouritesException, Unit>
+    fun removeFavorite(favourite: Favourite): Either<FavouritesException, Unit>
 }

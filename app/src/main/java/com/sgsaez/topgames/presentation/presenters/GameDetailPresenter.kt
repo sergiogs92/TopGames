@@ -5,11 +5,10 @@ import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
 import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameDetailView
-import com.sgsaez.topgames.support.SchedulerProvider
+import com.sgsaez.topgames.support.domains.functional.fold
 import com.sgsaez.topgames.support.fromHtml
 
-class GameDetailPresenter(private val addFavourite: AddFavourite, private val schedulerProvider: SchedulerProvider) :
-        BasePresenter<GameDetailView>() {
+class GameDetailPresenter(private val addFavourite: AddFavourite) : BasePresenter<GameDetailView>() {
 
     fun onInit(game: GameViewModel) {
         view?.addTitleToolbar(game.name)
@@ -28,10 +27,11 @@ class GameDetailPresenter(private val addFavourite: AddFavourite, private val sc
     }
 
     fun onSaveFavouriteGame(game: GameViewModel) {
-        addDisposable(addFavourite.execute(game)
-                .subscribeOn(schedulerProvider.ioScheduler())
-                .observeOn(schedulerProvider.uiScheduler())
-                .subscribe({ view?.showSaveFavourite() }, { it.toSaveFavouritesThrowable() }))
+        addFavourite.execute(game, onCompleted = {result ->
+            result.fold(
+                    {error -> error.toSaveFavouritesThrowable()},
+                    { view?.showSaveFavourite()})
+        })
     }
 
     private fun Throwable.toSaveFavouritesThrowable(): Unit? {

@@ -10,9 +10,10 @@ import dagger.Provides
 @Module
 class GameListFragmentModule {
     @Provides
-    fun provideGetGames(gameRepository: GameRepository) = GetGames(gameRepository)
+    fun provideGetGames(gameRepository: GameRepository, schedulerProvider: SchedulerProvider) =
+            GetGames(gameRepository, schedulerProvider)
 
     @Provides
-    fun providePresenter(getGames: GetGames, schedulerProvider: SchedulerProvider)
-            = GameListPresenter(getGames, schedulerProvider)
+    fun providePresenter(getGames: GetGames) = GameListPresenter(getGames)
+
 }

@@ -66,4 +66,5 @@ class ApplicationModule(val application: TopGamesApplication) {
     @Provides
     @Singleton
     fun provideConnectivityChecker(context: Context): ConnectivityChecker = DeviceConnectivity(context)
+
 }

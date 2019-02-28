@@ -89,9 +89,4 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
         presenter.detachView()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.disposeComposite()
-    }
-
 }
