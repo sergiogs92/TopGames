@@ -18,6 +18,7 @@ This application shows concepts such as:
 - Dependency injection with Dagger2<br />
 - Creating network requests with Retrofit<br />
 - Room Persistence Library. Offline first<br />
+- Using coroutines<br />
 - Using functional, Either type to handling data response<br />
 - Using Extension Functions<br />
 - Unit testing<br />
