@@ -23,12 +23,10 @@ import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
-import com.sgsaez.topgames.di.components.DaggerTopGamesApplicationComponentMock
 import com.sgsaez.topgames.di.modules.TopGamesApplicationModuleMock
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.support.RecyclerViewMatcher
-import io.reactivex.Single
-import io.reactivex.SingleEmitter
+import com.sgsaez.topgames.support.domains.functional.Either
 import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Rule
@@ -128,10 +126,9 @@ class GameListFragmentTest {
     }
 
     private fun mockGames() {
-        val mockSingle = Single.create<GameList> { emitter: SingleEmitter<GameList> ->
-            val gameList = GameList(getMockGameList())
-            emitter.onSuccess(gameList)
-        }
+        val gameList = GameList(getMockGameList())
+        val mockSingle = Either.Right(gameList)
+
         whenever(mockGameRepository.getGames("0", "")).thenReturn(mockSingle)
     }
 

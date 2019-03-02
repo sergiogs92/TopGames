@@ -10,6 +10,8 @@ import com.sgsaez.topgames.data.repositories.game.DefaultGameRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.domain.game.GameError
 import com.sgsaez.topgames.domain.game.GamesException
+import com.sgsaez.topgames.support.domains.functional.Either
+import com.sgsaez.topgames.support.domains.functional.fold
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -43,27 +45,38 @@ class GameRepositoryTest {
         gameRepository = DefaultGameRepository(mockApiService, mockGameDao, mockConnectivityChecker)
     }
 
-//TODO: review testGetGamesIsOnlineReceivedEmptyListAndEmitEmptyList
-//    @Test
-//    fun testGetGamesIsOnlineReceivedEmptyListAndEmitEmptyList() {
-//        val games = GameList(emptyList())
-//
-//        setUpMocks(games, true)
-//        val testObserver = gameRepository.getGames("0", "").test()
-//
-//        testObserver.assertError(GamesException(GameError.ERROR_NO_DATA_RECEIVED))
-//    }
+    @Test
+    fun testGetFavouritesReceivedEmptyListAndEmitNoDataFound() {
+        val gameList = GameList(emptyList())
+
+        setUpMocks(gameList, true)
+        val games = gameRepository.getGames("0", "")
+
+        games shouldBeInstanceOf Either::class.java
+        games.fold({ left ->
+            left shouldBeInstanceOf GamesException::class.java
+            left.error shouldBe GameError.ERROR_NO_DATA_RECEIVED
+        }, {})
+    }
+
 
     @Test
     fun testGetGamesIsOnlineReceivedListAndEmitList() {
-        val games = GameList(listOf(Game("1", "This is the game", "My game", Image("url"))))
+        val gameList = GameList(listOf(Game("1", "This is the game", "My game", Image("url"))))
 
-        setUpMocks(games, true)
-        val testObserver = gameRepository.getGames("0", "").test()
+        setUpMocks(gameList, true)
 
-        testObserver.assertNoErrors()
-        testObserver.assertValue { gamesResult: GameList -> gamesResult.results.size == 1 }
-        Mockito.verify(mockGameDao).insertAll(games.results)
+        val games = gameRepository.getGames("0", "")
+
+        games shouldBeInstanceOf Either::class.java
+        games.fold({ fail() },
+                { right ->
+                    right.results[0] shouldBeInstanceOf Game::class.java
+                    right.results[0].name `should contain` "My game"
+                    right.results.size shouldBe 1
+                })
+
+        Mockito.verify(mockGameDao).insertAll(gameList.results)
     }
 
     private fun setUpMocks(modelFromUserService: GameList, isOnline: Boolean) {
@@ -73,4 +86,5 @@ class GameRepositoryTest {
         Mockito.`when`(mockGameResponse.body()).thenReturn(modelFromUserService)
         Mockito.`when`(mockGameDao.getGames()).thenReturn(emptyList())
     }
+
 }

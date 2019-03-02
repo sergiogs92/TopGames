@@ -2,12 +2,13 @@ package com.sgsaez.topgames.data.repositories
 
 import com.sgsaez.topgames.data.persistence.daos.FavouriteDao
 import com.sgsaez.topgames.data.persistence.entities.Favourite
-import com.sgsaez.topgames.data.persistence.entities.FavouriteList
 import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.data.repositories.favourite.DefaultFavouriteRepository
 import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
 import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
+import com.sgsaez.topgames.support.domains.functional.Either
+import com.sgsaez.topgames.support.domains.functional.fold
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -29,34 +30,48 @@ class FavouriteRepositoryTest {
 
     @Test
     fun testGetFavouritesReceivedListAndEmitList() {
-        val favourites = listOf(Favourite("1", "This is the game", "My game", Image("url")))
+        val favouriteList = listOf(Favourite("1", "This is the game", "My game", Image("url")))
 
-        setUpMocks(favourites)
-        val testObserver = favouriteRepository.getFavorites().test()
+        setUpMocks(favouriteList)
+        val favourites = favouriteRepository.getFavorites()
 
-        testObserver.assertNoErrors()
-        testObserver.assertValue { favouritesResult: FavouriteList -> favouritesResult.results.size == 1 }
+        favourites shouldBeInstanceOf Either::class.java
+        favourites.fold({ fail() },
+                { right ->
+                    right.results[0] shouldBeInstanceOf Favourite::class.java
+                    right.results[0].name `should contain` "This is the game"
+                    right.results.size shouldBe 1
+                })
+
         Mockito.verify(mockFavouriteDao).getFavourites()
     }
 
-//TODO: review testGetFavouritesReceivedEmptyListAndEmitNoDataFound
-//    @Test
-//    fun testGetFavouritesReceivedEmptyListAndEmitNoDataFound() {
-//        val favourites = emptyList<Favourite>()
-//
-//        setUpMocks(favourites)
-//        val testObserver = favouriteRepository.getFavorites().test()
-//
-//        testObserver.assertError(FavouritesException(FavoriteError.ERROR_NO_DATA_FOUND))
-//    }
+    @Test
+    fun testGetFavouritesReceivedEmptyListAndEmitNoDataFound() {
+        val favouriteList = emptyList<Favourite>()
+
+        setUpMocks(favouriteList)
+        val favourites = favouriteRepository.getFavorites()
+
+        favourites shouldBeInstanceOf Either::class.java
+        favourites.fold({ left ->
+            left shouldBeInstanceOf FavouritesException::class.java
+            left.error shouldBe FavoriteError.ERROR_NO_DATA_FOUND
+        }, {})
+    }
 
     @Test
     fun testAddFavouritesReceived() {
         val favourite = Favourite("1", "This is the game", "My game", Image("url"))
 
-        val testObserver = favouriteRepository.addFavorite(favourite).test()
+        val favourites = favouriteRepository.addFavorite(favourite)
 
-        testObserver.assertNoErrors()
+        favourites shouldBeInstanceOf Either::class.java
+        favourites.fold({ fail() },
+                { right ->
+                    right shouldBeInstanceOf Unit::class.java
+                })
+
         Mockito.verify(mockFavouriteDao).insertAll(favourite)
     }
 
@@ -64,13 +79,20 @@ class FavouriteRepositoryTest {
     fun testRemoveTargetFavourite() {
         val favourite = Favourite("1", "This is the game", "My game", Image("url"))
 
-        val testObserver = favouriteRepository.removeFavorite(favourite).test()
+        val favourites = favouriteRepository.removeFavorite(favourite)
 
-        testObserver.assertNoErrors()
+        favourites shouldBeInstanceOf Either::class.java
+        favourites.fold({ fail() },
+                { right ->
+                    right shouldBeInstanceOf Unit::class.java
+                })
+
         Mockito.verify(mockFavouriteDao).deleteFavourite(favourite)
+
     }
 
     private fun setUpMocks(mockFavourites: List<Favourite>) {
         Mockito.`when`(mockFavouriteDao.getFavourites()).thenReturn(mockFavourites)
     }
+
 }

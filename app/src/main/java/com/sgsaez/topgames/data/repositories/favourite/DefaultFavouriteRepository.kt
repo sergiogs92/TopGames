@@ -12,9 +12,10 @@ class DefaultFavouriteRepository(private val favouriteDao: FavouriteDao) : Favou
     override fun getFavorites(): Either<FavouritesException, FavouriteList> {
         return try {
             val favourites = favouriteDao.getFavourites()
-            Either.Right(FavouriteList(favourites))
+            if(favourites.isNotEmpty()) Either.Right(FavouriteList(favourites))
+            else Either.Left(FavouritesException(FavoriteError.ERROR_NO_DATA_FOUND))
         } catch (exception: Exception) {
-            Either.Left(FavouritesException(FavoriteError.ERROR_NO_DATA_FOUND))
+            Either.Left(FavouritesException(FavoriteError.DEFAULT))
         }
     }
 

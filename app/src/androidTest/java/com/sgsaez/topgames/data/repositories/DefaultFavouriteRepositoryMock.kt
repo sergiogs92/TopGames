@@ -4,16 +4,14 @@ import com.sgsaez.topgames.data.persistence.entities.Favourite
 import com.sgsaez.topgames.data.persistence.entities.FavouriteList
 import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
-import io.reactivex.Single
-import io.reactivex.SingleEmitter
+import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
+import com.sgsaez.topgames.support.domains.functional.Either
 
 class DefaultFavouriteRepositoryMock : FavouriteRepository {
 
-    override fun getFavorites(): Single<FavouriteList> {
-        return Single.create<FavouriteList> { emitter: SingleEmitter<FavouriteList> ->
-            val gameList = FavouriteList(getMockFavouriteList())
-            emitter.onSuccess(gameList)
-        }
+    override fun getFavorites(): Either<FavouritesException, FavouriteList>{
+        val gameList = FavouriteList(getMockFavouriteList())
+        return Either.Right(gameList)
     }
 
     private fun getMockFavouriteList(): List<Favourite> = (1..10).map {
@@ -22,15 +20,12 @@ class DefaultFavouriteRepositoryMock : FavouriteRepository {
         Favourite(it.toString(), "This is the game $number", "Game $number", Image(url))
     }
 
-    override fun addFavorite(favourite: Favourite): Single<Unit> {
-        return Single.create<Unit> { emitter: SingleEmitter<Unit> ->
-            emitter.onSuccess(Unit)
-        }
+    override fun addFavorite(favourite: Favourite): Either<FavouritesException, Unit> {
+        return Either.Right(Unit)
     }
 
-    override fun removeFavorite(favourite: Favourite): Single<Unit> {
-        return Single.create<Unit> { emitter: SingleEmitter<Unit> ->
-            emitter.onSuccess(Unit)
-        }
+    override fun removeFavorite(favourite: Favourite): Either<FavouritesException, Unit> {
+        return Either.Right(Unit)
     }
+
 }
