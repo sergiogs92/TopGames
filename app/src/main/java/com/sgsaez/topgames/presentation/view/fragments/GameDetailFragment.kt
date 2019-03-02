@@ -61,6 +61,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
         val isFavourite = arguments?.getBoolean(FAVOURITE_KEY)!!
         val game = arguments?.getParcelable<GameViewModel>(GAME_KEY)!!
         presenter.attachView(this)
+        presenter.initJob()
         initToolbar(game, isFavourite)
         initFloatingButton(game)
         presenter.onInit(game)
@@ -183,6 +184,11 @@ class GameDetailFragment : Fragment(), GameDetailView {
         super.onDestroyView()
         presenter.onResetStatusBarColor()
         presenter.detachView()
+    }
+
+    override fun onDestroy() {
+        presenter.cancelJob()
+        super.onDestroy()
     }
 
     @SuppressLint("NewApi")

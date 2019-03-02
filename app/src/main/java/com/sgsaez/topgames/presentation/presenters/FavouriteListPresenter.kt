@@ -8,14 +8,15 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.FavouriteListView
 import com.sgsaez.topgames.support.domains.functional.fold
 
-class FavouriteListPresenter(private val getFavourites: GetFavourites, private val removeFavourite: RemoveFavourite) : BasePresenter<FavouriteListView>() {
+class FavouriteListPresenter(private val getFavourites: GetFavourites,
+                             private val removeFavourite: RemoveFavourite) : BasePresenter<FavouriteListView>() {
 
     fun onLoadFavourites() {
-        getFavourites.execute(onCompleted = { result ->
-            result.fold(
-                    { error -> error.toGetFavouritesThrowable() },
-                    { games -> view?.addFavouriteToList(games) })
-        })
+        launchTask(action = { getFavourites.execute() },
+                onCompleted = {
+                    it.fold({ error -> error.toGetFavouritesThrowable() },
+                            { games -> view?.addFavouriteToList(games) })
+                })
     }
 
     private fun FavouritesException.toGetFavouritesThrowable(): Unit? {
@@ -30,11 +31,11 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites, private v
     }
 
     fun onRemoveFavouriteGame(favourite: GameViewModel) {
-        removeFavourite.execute(favourite, onCompleted = { result ->
-            result.fold(
-                    { error -> error.toGetFavouritesThrowable() },
-                    { view?.removeFavouriteToList(favourite) })
-        })
+        launchTask(action = { removeFavourite.execute(favourite) },
+                onCompleted = {
+                    it.fold({ error -> error.toGetFavouritesThrowable() },
+                            { view?.removeFavouriteToList(favourite) })
+                })
     }
 
 }

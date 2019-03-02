@@ -27,11 +27,11 @@ class GameDetailPresenter(private val addFavourite: AddFavourite) : BasePresente
     }
 
     fun onSaveFavouriteGame(game: GameViewModel) {
-        addFavourite.execute(game, onCompleted = {result ->
-            result.fold(
-                    {error -> error.toSaveFavouritesThrowable()},
-                    { view?.showSaveFavourite()})
-        })
+        launchTask(action = { addFavourite.execute(game) },
+                onCompleted = {
+                    it.fold({ error -> error.toSaveFavouritesThrowable() },
+                            { view?.showSaveFavourite() })
+                })
     }
 
     private fun Throwable.toSaveFavouritesThrowable(): Unit? {

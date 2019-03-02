@@ -25,8 +25,7 @@ class DefaultFavouriteRepository(private val favouriteDao: FavouriteDao) : Favou
             favouriteToFind?.let {
                 Either.Left(FavouritesException(FavoriteError.FAVOURITE_ALREADY_EXITS))
             } ?: run {
-                favouriteDao.insertAll(favourite)
-                Either.Right(Unit)
+                favouriteDao.insertAll(favourite); Either.Right(Unit)
             }
         } catch (exception: Exception) {
             Either.Left(FavouritesException(FavoriteError.FAVOURITE_ALREADY_EXITS))

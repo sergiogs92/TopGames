@@ -49,6 +49,7 @@ class GameListFragment : Fragment(), GameListView {
         val query = arguments?.getString(QUERY_KEY)
         page = page.update(Page(requestedPage = page.requestedPage, query = query ?: ""))
         presenter.attachView(this)
+        presenter.initJob()
         initToolbar()
         initSwipeLayout()
         initRenderer()
@@ -122,9 +123,9 @@ class GameListFragment : Fragment(), GameListView {
             setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
             if (page.query.isEmpty())
                 setOnRefreshListener {
-                page = Page()
-                presenter.onLoadGames(page, isRefresh = true)
-            }
+                    page = Page()
+                    presenter.onLoadGames(page, isRefresh = true)
+                }
         }
     }
 
@@ -141,7 +142,7 @@ class GameListFragment : Fragment(), GameListView {
         if (page.items.isEmpty() || page.query.isNotEmpty()) {
             showLoading()
             presenter.onLoadGames(Page(query = page.query))
-        } else{
+        } else {
             addGameToList(isConfigurationChanged = isNewConfiguration, isQuery = page.query.isNotEmpty(), games = page.items)
         }
     }
@@ -193,6 +194,11 @@ class GameListFragment : Fragment(), GameListView {
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.detachView()
+    }
+
+    override fun onDestroy() {
+        presenter.cancelJob()
+        super.onDestroy()
     }
 
 }

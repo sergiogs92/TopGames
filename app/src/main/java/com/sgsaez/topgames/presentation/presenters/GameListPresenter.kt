@@ -11,14 +11,13 @@ import com.sgsaez.topgames.support.domains.functional.fold
 class GameListPresenter(private val getGames: GetGames) : BasePresenter<GameListView>() {
 
     fun onLoadGames(page: Page<GameViewModel>, isRefresh: Boolean = false) {
-        getGames.execute(page.requestedPage.toString(), page.query,
-                onCompleted = { result ->
-                    result.fold(
-                            { error -> error.toGetGamesThrowable() },
+        launchTask(action = { getGames.execute(page.requestedPage.toString(), page.query) },
+                onCompleted = {
+                    it.fold({ error -> error.toGetGamesThrowable() },
                             { games -> onCompleteGetGames(page.query.isNotEmpty(), isRefresh, games) })
-                }
-        )
+                })
     }
+
 
     private fun onCompleteGetGames(isQuery: Boolean, isRefresh: Boolean, games: List<GameViewModel>) {
         view?.hideLoading()

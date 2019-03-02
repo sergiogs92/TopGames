@@ -12,8 +12,6 @@ import com.sgsaez.topgames.data.repositories.favourite.DefaultFavouriteRepositor
 import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.data.repositories.game.DefaultGameRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
-import com.sgsaez.topgames.support.AppSchedulerProvider
-import com.sgsaez.topgames.support.SchedulerProvider
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -59,9 +57,6 @@ class ApplicationModule(val application: TopGamesApplication) {
     fun provideDatabase(context: Context)
             = Room.databaseBuilder(context, TopGamesDatabase::class.java, DATABASE_NAME).build()
 
-    @Provides
-    @Singleton
-    fun provideSchedulerProvider(): SchedulerProvider = AppSchedulerProvider()
 
     @Provides
     @Singleton

@@ -32,6 +32,7 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.attachView(this)
+        presenter.initJob()
         initToolbar()
         initRenderer()
         paintGames()
@@ -87,6 +88,11 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
     override fun onDestroyView() {
         super.onDestroyView()
         presenter.detachView()
+    }
+
+    override fun onDestroy() {
+        presenter.cancelJob()
+        super.onDestroy()
     }
 
 }

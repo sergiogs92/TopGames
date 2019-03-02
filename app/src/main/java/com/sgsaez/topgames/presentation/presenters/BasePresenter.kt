@@ -1,6 +1,15 @@
 package com.sgsaez.topgames.presentation.presenters
 
-abstract class BasePresenter<T> {
+import com.sgsaez.topgames.support.domains.functional.Either
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
+
+abstract class BasePresenter<T> : CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    private lateinit var job: Job
 
     var view: T? = null
         private set
@@ -9,8 +18,23 @@ abstract class BasePresenter<T> {
         this.view = view
     }
 
+    fun initJob() {
+        job = Job()
+    }
+
+    fun <L, R> launchTask(action: () -> Either<L, R>, onCompleted: (Either<L, R>) -> Unit) {
+        launch {
+            val result = withContext(Dispatchers.IO) { action() }
+            onCompleted(result)
+        }
+    }
+
     fun detachView() {
         this.view = null
+    }
+
+    fun cancelJob() {
+        job.cancel()
     }
 
 }
