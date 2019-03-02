@@ -1,5 +1,5 @@
 # TopGames
-My first Kotlin App based on a list of games that includes search by game/s and favorites section. You can access the details of each game and share the corresponding information through social networks. This app includes offline access.
+Kotlin App based on a list of games that includes search by game/s and favorites section. You can access the details of each game and share the corresponding information through social networks. This app includes offline access.
 ## About the app
 ### Portrait ###
 ![alt text](https://github.com/sergiogs92/TopGames/blob/master/img/list_portrait_games.png?raw=true)
@@ -18,7 +18,7 @@ This application shows concepts such as:
 - Dependency injection with Dagger2<br />
 - Creating network requests with Retrofit<br />
 - Room Persistence Library. Offline first<br />
-- Using RxJava2 to handle data flow<br />
+- Using functional, Either type to handling data response<br />
 - Using Extension Functions<br />
-- Unit testing each layer of the app with Mockito, PowerMock<br />
+- Unit testing<br />
 - UI testing with Espresso<br />
