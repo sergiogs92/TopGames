@@ -9,11 +9,15 @@ import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
 import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.support.domains.functional.Either
 import com.sgsaez.topgames.support.domains.functional.fold
+import org.amshove.kluent.`should contain`
+import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import kotlin.test.fail
 
 class FavouriteRepositoryTest {
 

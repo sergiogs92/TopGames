@@ -12,6 +12,9 @@ import com.sgsaez.topgames.domain.game.GameError
 import com.sgsaez.topgames.domain.game.GamesException
 import com.sgsaez.topgames.support.domains.functional.Either
 import com.sgsaez.topgames.support.domains.functional.fold
+import org.amshove.kluent.`should contain`
+import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -19,6 +22,7 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import retrofit2.Call
 import retrofit2.Response
+import kotlin.test.fail
 
 class GameRepositoryTest {
 
