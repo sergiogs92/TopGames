@@ -16,11 +16,10 @@ class GameListPresenter(private val getGames: GetGames) : BasePresenter<GameList
     private fun onLoadGames(page: Page<GameViewModel>) {
         launchTask(action = { getGames.execute(page.requestedPage.toString(), page.query) },
                 onCompleted = {
-                    it.fold({ error -> error.toGetGamesThrowable() },
+                    it.fold({ error -> error.toGetGameError() },
                             { games -> onCompleteGetGames(games) })
                 })
     }
-
 
     private fun onCompleteGetGames(games: List<GameViewModel>) {
         view?.hideLoading()
@@ -28,7 +27,7 @@ class GameListPresenter(private val getGames: GetGames) : BasePresenter<GameList
         view?.addGameToList(page)
     }
 
-    private fun GamesException.toGetGamesThrowable(): Unit? {
+    private fun GamesException.toGetGameError(): Unit? {
         view?.hideLoading()
         return when (error) {
             GameError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()

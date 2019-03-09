@@ -14,12 +14,12 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites,
     fun onLoadFavourites() {
         launchTask(action = { getFavourites.execute() },
                 onCompleted = {
-                    it.fold({ error -> error.toGetFavouritesThrowable() },
+                    it.fold({ error -> error.toGetFavouriteError() },
                             { games -> view?.addFavouriteToList(games) })
                 })
     }
 
-    private fun FavouritesException.toGetFavouritesThrowable(): Unit? {
+    private fun FavouritesException.toGetFavouriteError(): Unit? {
         return when (error) {
             FavoriteError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
             else -> view?.showNoDataFoundError()
@@ -33,7 +33,7 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites,
     fun onRemoveFavouriteGame(favourite: GameViewModel) {
         launchTask(action = { removeFavourite.execute(favourite) },
                 onCompleted = {
-                    it.fold({ error -> error.toGetFavouritesThrowable() },
+                    it.fold({ error -> error.toGetFavouriteError() },
                             { view?.removeFavouriteToList(favourite) })
                 })
     }
