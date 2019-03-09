@@ -13,9 +13,8 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.presentation.view.renderers.GameListRenderer
-import com.sgsaez.topgames.support.condition
 import com.sgsaez.topgames.support.domains.Page
-import com.sgsaez.topgames.support.domains.update
+import com.sgsaez.topgames.support.inflate
 import com.sgsaez.topgames.support.navigation.navigateTo
 import com.sgsaez.topgames.support.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_game_list.*
@@ -33,7 +32,7 @@ class GameListFragment : Fragment(), GameListView {
     private val presenter: GameListPresenter by lazy { component.presenter() }
     private val component by lazy { topGamesApplication.component.plus(GameListFragmentModule()) }
     private lateinit var renderer: GameListRenderer
-    private var page = Page<GameViewModel>()
+    private lateinit var query: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,23 +40,22 @@ class GameListFragment : Fragment(), GameListView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_game_list, container, false)
+        return container?.inflate(R.layout.fragment_game_list)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val query = arguments?.getString(QUERY_KEY)
-        page = page.update(Page(requestedPage = page.requestedPage, query = query ?: ""))
+        query = arguments?.getString(QUERY_KEY) ?: ""
         presenter.attachView(this)
         presenter.initJob()
         initToolbar()
         initSwipeLayout()
         initRenderer()
-        paintGames(true)
+        presenter.showGames(query)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        if (page.query.isEmpty()) {
+        if (query.isEmpty()) {
             inflater!!.inflate(R.menu.game_list_menu, menu)
             initMenu(menu)
         }
@@ -67,7 +65,7 @@ class GameListFragment : Fragment(), GameListView {
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         initRenderer()
-        addGameToList(isConfigurationChanged = true, isQuery = page.query.isNotEmpty(), games = page.items)
+        presenter.showGames(query)
     }
 
     private fun initMenu(menu: Menu?) {
@@ -103,15 +101,17 @@ class GameListFragment : Fragment(), GameListView {
 
     private fun initToolbar() {
         listToolbar.apply {
-            title = condition({ page.query.isEmpty() }, {
+            title = if (query.isEmpty()) {
                 inflateMenu(R.menu.game_list_menu)
                 resources.getString(R.string.app_name)
-            }, { String.format(resources.getString(R.string.search_title), page.query) })
+            } else {
+                String.format(resources.getString(R.string.search_title), query)
+            }
         }
         val appCompatActivity = activity as AppCompatActivity
         appCompatActivity.setSupportActionBar(listToolbar)
         appCompatActivity.supportActionBar?.apply {
-            if (page.query.isNotEmpty()) {
+            if (query.isNotEmpty()) {
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
             }
@@ -121,10 +121,9 @@ class GameListFragment : Fragment(), GameListView {
     private fun initSwipeLayout() {
         swipeRefreshLayout.apply {
             setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary, R.color.colorAccent)
-            if (page.query.isEmpty())
+            if (query.isEmpty())
                 setOnRefreshListener {
-                    page = Page()
-                    presenter.onLoadGames(page, isRefresh = true)
+                    presenter.showGames(isRefresh = true)
                 }
         }
     }
@@ -138,26 +137,12 @@ class GameListFragment : Fragment(), GameListView {
         })
     }
 
-    private fun paintGames(isNewConfiguration: Boolean) {
-        if (page.items.isEmpty() || page.query.isNotEmpty()) {
-            showLoading()
-            presenter.onLoadGames(Page(query = page.query))
-        } else {
-            addGameToList(isConfigurationChanged = isNewConfiguration, isQuery = page.query.isNotEmpty(), games = page.items)
-        }
-    }
-
     override fun showLoading() {
         swipeRefreshLayout.isRefreshing = true
     }
 
     override fun hideLoading() {
         swipeRefreshLayout.isRefreshing = false
-    }
-
-    override fun addGameToList(isConfigurationChanged: Boolean, isQuery: Boolean, games: List<GameViewModel>) {
-        page = if (isConfigurationChanged) page else page.update(Page(page.requestedPage + 1, games, page.query))
-        renderer.render(page)
     }
 
     override fun showNoDataFoundError() {
@@ -174,6 +159,10 @@ class GameListFragment : Fragment(), GameListView {
 
     override fun clearList() {
         renderer.clearGames()
+    }
+
+    override fun addGameToList(page: Page<GameViewModel>) {
+        renderer.render(page)
     }
 
     override fun navigateToGame(game: GameViewModel) {

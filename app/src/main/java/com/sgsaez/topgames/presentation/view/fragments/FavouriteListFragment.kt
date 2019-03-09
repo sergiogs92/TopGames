@@ -13,6 +13,7 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
 import com.sgsaez.topgames.presentation.view.FavouriteListView
 import com.sgsaez.topgames.presentation.view.renderers.FavouriteListRenderer
+import com.sgsaez.topgames.support.inflate
 import com.sgsaez.topgames.support.navigation.navigateTo
 import com.sgsaez.topgames.support.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_favourite_list.*
@@ -26,7 +27,7 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
     private lateinit var renderer: FavouriteListRenderer
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_favourite_list, container, false)
+        return container?.inflate(R.layout.fragment_favourite_list)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,7 +36,7 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
         presenter.initJob()
         initToolbar()
         initRenderer()
-        paintGames()
+        presenter.onLoadFavourites()
     }
 
     private fun initToolbar() {
@@ -57,10 +58,6 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
             }
 
         })
-    }
-
-    private fun paintGames(){
-        presenter.onLoadFavourites()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {

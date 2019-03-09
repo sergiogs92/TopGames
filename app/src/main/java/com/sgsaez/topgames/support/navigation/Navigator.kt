@@ -3,7 +3,6 @@ package com.sgsaez.topgames.support.navigation
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import com.sgsaez.topgames.R
-import com.sgsaez.topgames.support.condition
 
 private const val FIRST_FRAGMENT: Int = 1
 
@@ -18,5 +17,5 @@ fun FragmentActivity.navigateTo(fragment: Fragment) {
 
 fun FragmentActivity.navigateBack() {
     val fragments = supportFragmentManager.backStackEntryCount
-    condition({ fragments == FIRST_FRAGMENT }, { finish() }, { supportFragmentManager.popBackStack() })
+    if (fragments == FIRST_FRAGMENT) finish() else supportFragmentManager.popBackStack()
 }

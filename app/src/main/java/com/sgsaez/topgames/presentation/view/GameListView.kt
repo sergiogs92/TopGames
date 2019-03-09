@@ -1,11 +1,12 @@
 package com.sgsaez.topgames.presentation.view
 
 import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.support.domains.Page
 
 interface GameListView {
     fun showLoading()
     fun hideLoading()
-    fun addGameToList(isConfigurationChanged: Boolean = false, isQuery: Boolean, games: List<GameViewModel>)
+    fun addGameToList(page: Page<GameViewModel>)
     fun showNoDataFoundError()
     fun showInternetConnectionError()
     fun showDefaultError()

@@ -7,22 +7,25 @@ import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameListView
 import com.sgsaez.topgames.support.domains.Page
 import com.sgsaez.topgames.support.domains.functional.fold
+import com.sgsaez.topgames.support.domains.update
 
 class GameListPresenter(private val getGames: GetGames) : BasePresenter<GameListView>() {
 
-    fun onLoadGames(page: Page<GameViewModel>, isRefresh: Boolean = false) {
+    private var page: Page<GameViewModel> = Page()
+
+    private fun onLoadGames(page: Page<GameViewModel>) {
         launchTask(action = { getGames.execute(page.requestedPage.toString(), page.query) },
                 onCompleted = {
                     it.fold({ error -> error.toGetGamesThrowable() },
-                            { games -> onCompleteGetGames(page.query.isNotEmpty(), isRefresh, games) })
+                            { games -> onCompleteGetGames(games) })
                 })
     }
 
 
-    private fun onCompleteGetGames(isQuery: Boolean, isRefresh: Boolean, games: List<GameViewModel>) {
+    private fun onCompleteGetGames(games: List<GameViewModel>) {
         view?.hideLoading()
-        if (isRefresh) view?.clearList()
-        view?.addGameToList(isQuery = isQuery, games = games)
+        page = page.update(Page(items = games))
+        view?.addGameToList(page)
     }
 
     private fun GamesException.toGetGamesThrowable(): Unit? {
@@ -31,6 +34,23 @@ class GameListPresenter(private val getGames: GetGames) : BasePresenter<GameList
             GameError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
             GameError.ERROR_INTERNET_CONNECTION -> view?.showInternetConnectionError()
             else -> view?.showDefaultError()
+        }
+    }
+
+    fun showGames(query: String = "", isRefresh: Boolean = false) {
+        when {
+            page.items.isEmpty() -> {
+                view?.showLoading()
+                page = page.update(Page(query = query))
+                onLoadGames(page)
+            }
+            isRefresh -> {
+                view?.showLoading()
+                view?.clearList()
+                page = Page()
+                onLoadGames(page)
+            }
+            else -> view?.addGameToList(page)
         }
     }
 
@@ -47,7 +67,8 @@ class GameListPresenter(private val getGames: GetGames) : BasePresenter<GameList
     }
 
     fun onLoadMore(requestPage: Int) {
-        onLoadGames(Page(requestedPage = requestPage))
+        page = page.update(Page(requestedPage = requestPage))
+        onLoadGames(page)
     }
 
 }

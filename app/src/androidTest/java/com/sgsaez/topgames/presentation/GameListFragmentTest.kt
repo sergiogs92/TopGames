@@ -23,6 +23,7 @@ import com.sgsaez.topgames.data.persistence.entities.GameList
 import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
+import com.sgsaez.topgames.di.components.DaggerTopGamesApplicationComponentMock
 import com.sgsaez.topgames.di.modules.TopGamesApplicationModuleMock
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.support.RecyclerViewMatcher

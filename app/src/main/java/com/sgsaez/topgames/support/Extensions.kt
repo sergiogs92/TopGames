@@ -20,12 +20,6 @@ fun ImageView.loadUrl(url: String) {
     Picasso.with(context).load(url).into(this)
 }
 
-fun isLollipopOrAbove(func: () -> Unit) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        func()
-    }
-}
-
 @Suppress("DEPRECATION")
 fun String.fromHtml() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
     Html.fromHtml(this, Html.FROM_HTML_MODE_COMPACT);

@@ -21,7 +21,7 @@ import com.sgsaez.topgames.di.modules.GameDetailFragmentModule
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
 import com.sgsaez.topgames.presentation.view.GameDetailView
-import com.sgsaez.topgames.support.isLollipopOrAbove
+import com.sgsaez.topgames.support.inflate
 import com.sgsaez.topgames.support.topGamesApplication
 import com.sgsaez.topgames.support.withBundle
 import com.squareup.picasso.Callback
@@ -53,7 +53,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_game_detail, container, false)
+        return container?.inflate(R.layout.fragment_game_detail)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,11 +96,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
     }
 
     private fun initFloatingButton(game: GameViewModel) {
-        isLollipopOrAbove {
-            floatingButton.apply {
-                setOnClickListener { presenter.onSocialSharedClicked(game) }
-            }
-        }
+        floatingButton.setOnClickListener { presenter.onSocialSharedClicked(game) }
     }
 
     override fun addTitleToolbar(name: String) {
@@ -128,9 +124,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
             val primaryDarkColor = ContextCompat.getColor(activity!!, R.color.colorPrimaryDark)
             val primaryColor = ContextCompat.getColor(activity!!, R.color.colorPrimary)
             collapsingToolbar.setContentScrimColor(palette.getMutedColor(primaryColor))
-            isLollipopOrAbove {
-                activity!!.window.statusBarColor = palette.getDarkMutedColor(primaryDarkColor)
-            }
+            activity!!.window.statusBarColor = palette.getDarkMutedColor(primaryDarkColor)
             updateBackground(palette, primaryColor, primaryDarkColor)
         }
     }
@@ -193,9 +187,7 @@ class GameDetailFragment : Fragment(), GameDetailView {
 
     @SuppressLint("NewApi")
     override fun resetStatusBarColor() {
-        isLollipopOrAbove {
-            activity!!.window.statusBarColor = ContextCompat.getColor(context!!, R.color.colorPrimaryDark)
-        }
+        activity!!.window.statusBarColor = ContextCompat.getColor(context!!, R.color.colorPrimaryDark)
     }
 
 }
