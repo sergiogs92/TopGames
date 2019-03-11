@@ -63,6 +63,7 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         initRenderer()
+        presenter.onLoadFavourites()
     }
 
     override fun addFavouriteToList(favouriteGames: List<GameViewModel>) {
