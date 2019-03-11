@@ -8,7 +8,7 @@ import com.sgsaez.topgames.support.domains.functional.fold
 
 class GetGames(private val gameRepository: GameRepository) {
 
-    fun execute(initValue: String, query: String): Either<GamesException, List<GameViewModel>> {
+    fun execute(initValue: String, query: String): Either<GameError, List<GameViewModel>> {
         return gameRepository.getGames(initValue, query)
                 .let {
                     it.fold(

@@ -9,7 +9,6 @@ import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.data.repositories.game.DefaultGameRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.domain.game.GameError
-import com.sgsaez.topgames.domain.game.GamesException
 import com.sgsaez.topgames.support.domains.functional.Either
 import com.sgsaez.topgames.support.domains.functional.fold
 import org.amshove.kluent.`should contain`
@@ -58,11 +57,10 @@ class GameRepositoryTest {
 
         games shouldBeInstanceOf Either::class.java
         games.fold({ left ->
-            left shouldBeInstanceOf GamesException::class.java
-            left.error shouldBe GameError.ERROR_NO_DATA_RECEIVED
+            left shouldBeInstanceOf GameError::class.java
+            left shouldBe GameError.GamesNotReceived
         }, {})
     }
-
 
     @Test
     fun testGetGamesIsOnlineReceivedListAndEmitList() {

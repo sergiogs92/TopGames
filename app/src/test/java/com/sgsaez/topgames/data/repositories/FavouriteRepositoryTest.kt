@@ -6,7 +6,6 @@ import com.sgsaez.topgames.data.persistence.entities.Image
 import com.sgsaez.topgames.data.repositories.favourite.DefaultFavouriteRepository
 import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
-import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.support.domains.functional.Either
 import com.sgsaez.topgames.support.domains.functional.fold
 import org.amshove.kluent.`should contain`
@@ -59,8 +58,8 @@ class FavouriteRepositoryTest {
 
         favourites shouldBeInstanceOf Either::class.java
         favourites.fold({ left ->
-            left shouldBeInstanceOf FavouritesException::class.java
-            left.error shouldBe FavoriteError.ERROR_NO_DATA_FOUND
+            left shouldBeInstanceOf FavoriteError::class.java
+            left shouldBe FavoriteError.FavouritesNotFound
         }, {})
     }
 

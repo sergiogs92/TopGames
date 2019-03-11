@@ -2,7 +2,6 @@ package com.sgsaez.topgames.presentation.presenters
 
 import com.sgsaez.topgames.domain.favourite.AddFavourite
 import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
-import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameDetailView
 import com.sgsaez.topgames.support.domains.functional.fold
@@ -34,9 +33,9 @@ class GameDetailPresenter(private val addFavourite: AddFavourite) : BasePresente
                 })
     }
 
-    private fun FavouritesException.toSaveFavouriteError(): Unit? {
-        return when (error) {
-            FavoriteError.FAVOURITE_ALREADY_EXITS -> view?.showFavouriteAlreadyExists()
+    private fun FavoriteError.toSaveFavouriteError(): Unit? {
+        return when (this) {
+            FavoriteError.FavouriteAlreadyExist -> view?.showFavouriteAlreadyExists()
             else -> view?.showGeneralError()
         }
     }

@@ -3,7 +3,6 @@ package com.sgsaez.topgames.presentation.presenters
 import com.sgsaez.topgames.domain.favourite.GetFavourites
 import com.sgsaez.topgames.domain.favourite.RemoveFavourite
 import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
-import com.sgsaez.topgames.domain.favourite.exception.FavouritesException
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.FavouriteListView
 import com.sgsaez.topgames.support.domains.functional.fold
@@ -19,9 +18,9 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites,
                 })
     }
 
-    private fun FavouritesException.toGetFavouriteError(): Unit? {
-        return when (error) {
-            FavoriteError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
+    private fun FavoriteError.toGetFavouriteError(): Unit? {
+        return when (this) {
+            FavoriteError.FavouritesNotFound -> view?.showNoDataFoundError()
             else -> view?.showNoDataFoundError()
         }
     }

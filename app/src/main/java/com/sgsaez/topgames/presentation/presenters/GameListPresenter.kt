@@ -1,7 +1,6 @@
 package com.sgsaez.topgames.presentation.presenters
 
 import com.sgsaez.topgames.domain.game.GameError
-import com.sgsaez.topgames.domain.game.GamesException
 import com.sgsaez.topgames.domain.game.GetGames
 import com.sgsaez.topgames.presentation.model.GameViewModel
 import com.sgsaez.topgames.presentation.view.GameListView
@@ -27,11 +26,11 @@ class GameListPresenter(private val getGames: GetGames) : BasePresenter<GameList
         view?.addGameToList(page)
     }
 
-    private fun GamesException.toGetGameError(): Unit? {
+    private fun GameError.toGetGameError(): Unit? {
         view?.hideLoading()
-        return when (error) {
-            GameError.ERROR_NO_DATA_FOUND -> view?.showNoDataFoundError()
-            GameError.ERROR_INTERNET_CONNECTION -> view?.showInternetConnectionError()
+        return when (this) {
+            GameError.GamesNotFound -> view?.showNoDataFoundError()
+            GameError.NetworkConnection -> view?.showInternetConnectionError()
             else -> view?.showDefaultError()
         }
     }
