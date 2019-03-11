@@ -11,9 +11,10 @@ class DefaultFavouriteRepository(private val favouriteDao: FavouriteDao) : Favou
 
     override fun getFavorites(): Either<FavouritesException, FavouriteList> {
         return try {
-            val favourites = favouriteDao.getFavourites()
-            if(favourites.isNotEmpty()) Either.Right(FavouriteList(favourites))
-            else Either.Left(FavouritesException(FavoriteError.ERROR_NO_DATA_FOUND))
+            favouriteDao.getFavourites()
+                    .takeIf { it.isNotEmpty() }
+                    ?.let { Either.Right(FavouriteList(it)) }
+                    ?: Either.Left(FavouritesException(FavoriteError.ERROR_NO_DATA_FOUND))
         } catch (exception: Exception) {
             Either.Left(FavouritesException(FavoriteError.DEFAULT))
         }
@@ -21,12 +22,9 @@ class DefaultFavouriteRepository(private val favouriteDao: FavouriteDao) : Favou
 
     override fun addFavorite(favourite: Favourite): Either<FavouritesException, Unit> {
         return try {
-            val favouriteToFind = favouriteDao.getFavourite(favourite.id)
-            favouriteToFind?.let {
-                Either.Left(FavouritesException(FavoriteError.FAVOURITE_ALREADY_EXITS))
-            } ?: run {
-                favouriteDao.insertAll(favourite); Either.Right(Unit)
-            }
+            favouriteDao.getFavourite(favourite.id)
+                    ?.let { Either.Left(FavouritesException(FavoriteError.FAVOURITE_ALREADY_EXITS)) }
+                    ?: run { favouriteDao.insertAll(favourite).let { Either.Right(Unit) } }
         } catch (exception: Exception) {
             Either.Left(FavouritesException(FavoriteError.FAVOURITE_ALREADY_EXITS))
         }
@@ -34,8 +32,7 @@ class DefaultFavouriteRepository(private val favouriteDao: FavouriteDao) : Favou
 
     override fun removeFavorite(favourite: Favourite): Either<FavouritesException, Unit> {
         return try {
-            favouriteDao.deleteFavourite(favourite)
-            Either.Right(Unit)
+            favouriteDao.deleteFavourite(favourite).let { Either.Right(Unit) }
         } catch (exception: Exception) {
             Either.Left(FavouritesException(FavoriteError.DEFAULT))
         }

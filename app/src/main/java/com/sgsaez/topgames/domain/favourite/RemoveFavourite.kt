@@ -10,8 +10,9 @@ import com.sgsaez.topgames.support.domains.functional.Either
 class RemoveFavourite(private val favouriteRepository: FavouriteRepository) {
 
     fun execute(favouriteGame: GameViewModel): Either<FavouritesException, Unit> {
-        val favourite = favouriteGame.let { Favourite(it.id, it.name, it.description, Image(it.imageUrl)) }
-        return favouriteRepository.removeFavorite(favourite)
+        return favouriteGame
+                .let { Favourite(it.id, it.name, it.description, Image(it.imageUrl)) }
+                .run { favouriteRepository.removeFavorite(this) }
     }
 
 }

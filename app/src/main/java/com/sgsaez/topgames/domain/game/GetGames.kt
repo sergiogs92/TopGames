@@ -9,15 +9,12 @@ import com.sgsaez.topgames.support.domains.functional.fold
 class GetGames(private val gameRepository: GameRepository) {
 
     fun execute(initValue: String, query: String): Either<GamesException, List<GameViewModel>> {
-        val games = gameRepository.getGames(initValue, query)
-        val gamesViewModel = games.fold(
-                { error -> Either.Left(error) },
-                { gameList ->
-                    val gameViewModelList = getGameViewModelList(gameList)
-                    Either.Right(gameViewModelList)
+        return gameRepository.getGames(initValue, query)
+                .let {
+                    it.fold(
+                            { error -> Either.Left(error) },
+                            { gameList -> getGameViewModelList(gameList).let { Either.Right(it) } })
                 }
-        )
-        return gamesViewModel
     }
 
     private fun getGameViewModelList(games: GameList): List<GameViewModel> {

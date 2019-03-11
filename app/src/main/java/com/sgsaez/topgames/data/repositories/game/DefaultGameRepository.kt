@@ -11,44 +11,35 @@ import com.sgsaez.topgames.support.domains.functional.Either
 class DefaultGameRepository(private val gameService: ApiService, private val gameDao: GameDao,
                             private val connectivityChecker: ConnectivityChecker) : GameRepository {
 
-    override fun getGames(initValue: String, query: String): Either<GamesException, GameList> {
+    override fun getGames(requestPage: String, query: String): Either<GamesException, GameList> {
         return try {
-            when {
-                query.isEmpty() -> {
-                    val games = gameService.getGames(initValue).execute().body()
-                    saveGamesReceived(games)
-                }
-                else -> tryLoadOfflineSearch(query)
-            }
+            if (query.isEmpty()) gameService.getGames(requestPage).execute().body().let(::saveGamesReceived)
+            else tryLoadOfflineSearch(query)
         } catch (exception: Exception) {
-            when {
-                !connectivityChecker.isOnline() -> tryLoadOfflineGames()
-                else -> Either.Left(GamesException(GameError.DEFAULT))
-            }
+            if (!connectivityChecker.isOnline()) tryLoadOfflineGames()
+            else Either.Left(GamesException(GameError.DEFAULT))
         }
     }
 
     private fun saveGamesReceived(games: GameList?): Either<GamesException, GameList> {
-        return games?.let {
-            when {
-                !games.results.isEmpty() -> {
-                    gameDao.insertAll(games.results);Either.Right(games)
-                }
-                else -> Either.Left(GamesException(GameError.ERROR_NO_DATA_RECEIVED))
-            }
-        } ?: Either.Left(GamesException(GameError.DEFAULT))
+        return games
+                ?.takeIf { it.results.isNotEmpty() }
+                ?.let { gameDao.insertAll(games.results).let { Either.Right(games) } }
+                ?: Either.Left(GamesException(GameError.ERROR_NO_DATA_RECEIVED))
     }
 
     private fun tryLoadOfflineGames(): Either<GamesException, GameList> {
-        val games = gameDao.getGames()
-        return if (games.isNotEmpty()) Either.Right(GameList(games))
-        else Either.Left(GamesException(GameError.ERROR_INTERNET_CONNECTION))
+        return gameDao.getGames()
+                .takeIf { it.isNotEmpty() }
+                ?.let { Either.Right(GameList(it)) }
+                ?: Either.Left(GamesException(GameError.ERROR_INTERNET_CONNECTION))
     }
 
     private fun tryLoadOfflineSearch(query: String): Either<GamesException, GameList> {
-        val games = gameDao.searchGames(query.plus("%"))
-        return if (games.isNotEmpty()) Either.Right(GameList(games))
-        else Either.Left(GamesException(GameError.ERROR_NO_DATA_FOUND))
+        return gameDao.searchGames(query.plus("%"))
+                .takeIf { it.isNotEmpty() }
+                ?.let { Either.Right(GameList(it)) }
+                ?: Either.Left(GamesException(GameError.ERROR_NO_DATA_FOUND))
     }
 
 }

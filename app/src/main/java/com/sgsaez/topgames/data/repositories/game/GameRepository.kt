@@ -5,5 +5,5 @@ import com.sgsaez.topgames.domain.game.GamesException
 import com.sgsaez.topgames.support.domains.functional.Either
 
 interface GameRepository {
-    fun getGames(initValue: String, query: String): Either<GamesException, GameList>
+    fun getGames(requestPage: String, query: String): Either<GamesException, GameList>
 }

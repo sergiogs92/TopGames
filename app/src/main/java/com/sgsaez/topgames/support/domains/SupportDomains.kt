@@ -8,8 +8,8 @@ data class Page<T>(
 
 fun <T> Page<T>.update(other: Page<T>): Page<T> {
     return Page(
-            requestedPage = other.requestedPage,
+            requestedPage = if(other.requestedPage != 0) other.requestedPage else this.requestedPage,
             items = this.items + other.items,
-            query = other.query
+            query = if(other.query.isNotEmpty()) other.query else this.query
     )
 }
