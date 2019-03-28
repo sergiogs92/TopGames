@@ -24,8 +24,7 @@ abstract class BasePresenter<T> : CoroutineScope {
 
     fun <L, R> launchTask(action: () -> Either<L, R>, onCompleted: (Either<L, R>) -> Unit) {
         launch {
-            val result = withContext(Dispatchers.IO) { action() }
-            onCompleted(result)
+            withContext(Dispatchers.IO) { action() }.let(onCompleted)
         }
     }
 
