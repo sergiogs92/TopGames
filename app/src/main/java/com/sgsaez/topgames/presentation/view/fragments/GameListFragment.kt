@@ -18,6 +18,7 @@ import com.sgsaez.topgames.presentation.viewmodel.GameListError
 import com.sgsaez.topgames.presentation.viewmodel.GameListViewModel
 import com.sgsaez.topgames.support.domains.Page
 import com.sgsaez.topgames.support.inflate
+import com.sgsaez.topgames.support.topGamesApplication
 import kotlinx.android.synthetic.main.fragment_game_list.*
 
 class GameListFragment : Fragment() {

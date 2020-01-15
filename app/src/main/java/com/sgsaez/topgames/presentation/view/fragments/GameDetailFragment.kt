@@ -24,6 +24,7 @@ import com.sgsaez.topgames.di.modules.GameDetailFragmentModule
 import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.viewmodel.GameDetailViewModel
 import com.sgsaez.topgames.support.inflate
+import com.sgsaez.topgames.support.topGamesApplication
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.description_item.*

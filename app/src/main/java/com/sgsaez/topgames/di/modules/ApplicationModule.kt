@@ -6,9 +6,6 @@ import com.sgsaez.topgames.TopGamesApplication
 import com.sgsaez.topgames.data.network.ApiService
 import com.sgsaez.topgames.data.network.connectivity.ConnectivityChecker
 import com.sgsaez.topgames.data.network.connectivity.DeviceConnectivity
-import com.sgsaez.topgames.data.persistence.TopGamesDatabase
-import com.sgsaez.topgames.data.repositories.favourite.DefaultFavouriteRepository
-import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.data.repositories.game.DefaultGameRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
 import dagger.Module
@@ -22,7 +19,6 @@ import javax.inject.Singleton
 class ApplicationModule(val application: TopGamesApplication) {
 
     private val BASE_URL = "https://www.giantbomb.com/api/games/"
-    private val DATABASE_NAME = "topGameDB"
 
     @Provides
     @Singleton
@@ -36,6 +32,7 @@ class ApplicationModule(val application: TopGamesApplication) {
             .baseUrl(BASE_URL)
             .build()
 
+
     @Provides
     @Singleton
     fun provideGameRepository(retrofit: Retrofit, connectivityChecker: ConnectivityChecker): GameRepository {
@@ -43,18 +40,6 @@ class ApplicationModule(val application: TopGamesApplication) {
                 retrofit.create(ApiService::class.java),
                 connectivityChecker)
     }
-
-    @Provides
-    @Singleton
-    fun provideFavouriteRepository(database: TopGamesDatabase): FavouriteRepository {
-        return DefaultFavouriteRepository(database.favouriteDao())
-    }
-
-    @Provides
-    @Singleton
-    fun provideDatabase(context: Context)
-            = Room.databaseBuilder(context, TopGamesDatabase::class.java, DATABASE_NAME).build()
-
 
     @Provides
     @Singleton

@@ -15,11 +15,11 @@ import com.sgsaez.topgames.data.repositories.game.GameRepository
 import com.sgsaez.topgames.data.repositories.game.NetGame
 import com.sgsaez.topgames.data.repositories.game.NetGameList
 import com.sgsaez.topgames.data.repositories.game.NetImage
+import com.sgsaez.topgames.di.components.DaggerTopGamesApplicationComponentMock
 import com.sgsaez.topgames.di.modules.TopGamesApplicationModuleMock
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.support.RecyclerViewMatcher
 import com.sgsaez.topgames.support.domains.functional.Either
-import org.hamcrest.Matchers.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,8 +33,6 @@ class GameListFragmentTest {
 
     lateinit var mockGameRepository: GameRepository
 
-    lateinit var mockFavouriteRepository: FavouriteRepository
-
     private fun withRecyclerView(recyclerViewId: Int): RecyclerViewMatcher {
         return RecyclerViewMatcher(recyclerViewId)
     }
@@ -42,7 +40,6 @@ class GameListFragmentTest {
     @Before
     fun setUp() {
         mockGameRepository = mock()
-        mockFavouriteRepository = mock()
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val app = instrumentation.targetContext.applicationContext as TopGamesApplication
         val testComponent = DaggerTopGamesApplicationComponentMock.builder()
@@ -62,58 +59,6 @@ class GameListFragmentTest {
     private fun checkNameOnPosition(position: Int, expectedName: String) {
         onView(withRecyclerView(R.id.recyclerView).atPositionOnView(position, R.id.name))
                 .check(matches(withText(expectedName)))
-    }
-
-    @Test
-    fun testOpenGameDetailOnItemClick() {
-        mockGames()
-        activityRule.launchActivity(Intent())
-        checkClickOnPosition(0)
-        checkElementsDisplayInDetail()
-    }
-
-    private fun checkClickOnPosition(position: Int) {
-        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(position, click()))
-    }
-
-    private fun checkElementsDisplayInDetail() {
-        onView(withId(R.id.detailToolbar)).check(ViewAssertions.matches(isDisplayed()))
-        onView(withId(R.id.image)).check(ViewAssertions.matches(isDisplayed()))
-        onView(withId(R.id.description)).check(ViewAssertions.matches(isDisplayed()))
-    }
-
-    @Test
-    fun testSearchOneItem() {
-        mockGames()
-        activityRule.launchActivity(Intent())
-        checkClickInSearchView()
-        checkSearch()
-    }
-
-    private fun checkClickInSearchView() {
-        onView(withId(R.id.game_list_searchView)).perform(click())
-    }
-
-    private fun checkSearch() {
-        onView(isAssignableFrom(EditText::class.java)).perform(typeText("Game 1"), pressImeActionButton())
-        onView(allOf(instanceOf(TextView::class.java), withParent(withId(R.id.listToolbar)))).check(matches(withText("Search: Game 1")))
-    }
-
-    @Test
-    fun testAddFavouriteOneItem() {
-        mockGames()
-        activityRule.launchActivity(Intent())
-        checkClickOnPosition(0)
-        checkClickInFavourite()
-        checkSavedFavourite()
-    }
-
-    private fun checkClickInFavourite() {
-        onView(withId(R.id.game_detail_favourite)).perform(click())
-    }
-
-    private fun checkSavedFavourite() {
-        onView(withText(R.string.saved_game)).inRoot(withDecorView(not(activityRule.activity.window.decorView))).check(matches(isDisplayed()))
     }
 
     private fun mockGames() {

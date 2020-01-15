@@ -1,9 +1,7 @@
 package com.sgsaez.topgames.di.modules
 
 import android.content.Context
-import com.sgsaez.topgames.data.repositories.DefaultFavouriteRepositoryMock
 import com.sgsaez.topgames.data.repositories.DefaultGameRepositoryMock
-import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
 import dagger.Module
 import dagger.Provides
@@ -19,9 +17,5 @@ class TopGamesApplicationModuleMock(private val applicationContext: Context) {
     @Provides
     @Singleton
     fun provideGameRepository(): GameRepository = DefaultGameRepositoryMock()
-
-    @Provides
-    @Singleton
-    fun provideFavouriteRepository(): FavouriteRepository = DefaultFavouriteRepositoryMock()
 
 }
