@@ -3,7 +3,7 @@ package com.sgsaez.topgames.support.custom
 import android.content.Context
 import android.util.AttributeSet
 
-class SquareImageView : android.support.v7.widget.AppCompatImageView {
+class SquareImageView : androidx.appcompat.widget.AppCompatImageView {
 
     constructor(context: Context) : super(context) {}
 

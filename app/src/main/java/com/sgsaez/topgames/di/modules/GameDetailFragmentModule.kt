@@ -1,18 +1,14 @@
 package com.sgsaez.topgames.di.modules
 
-import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
-import com.sgsaez.topgames.domain.favourite.AddFavourite
-import com.sgsaez.topgames.presentation.presenters.GameDetailPresenter
+import androidx.lifecycle.ViewModelProvider
+import com.sgsaez.topgames.di.support.Factory
+import com.sgsaez.topgames.presentation.viewmodel.GameDetailViewModel
 import dagger.Module
 import dagger.Provides
 
 @Module
 class GameDetailFragmentModule {
-
     @Provides
-    fun provideAddFavourites(favouriteRepository: FavouriteRepository) = AddFavourite(favouriteRepository)
-
-    @Provides
-    fun providePresenter(addFavourite: AddFavourite) = GameDetailPresenter(addFavourite)
+    fun providesViewModelFactory(): ViewModelProvider.Factory = Factory(GameDetailViewModel())
 
 }
