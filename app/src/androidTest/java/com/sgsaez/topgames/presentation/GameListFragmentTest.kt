@@ -1,29 +1,20 @@
 package com.sgsaez.topgames.presentation
 
 import android.content.Intent
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.*
-import android.support.test.espresso.assertion.ViewAssertions
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.contrib.RecyclerViewActions
-import android.support.test.espresso.matcher.RootMatchers.withDecorView
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import android.support.v7.widget.RecyclerView
-import android.widget.EditText
-import android.widget.TextView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.ActivityTestRule
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.TopGamesApplication
-import com.sgsaez.topgames.data.persistence.entities.Game
-import com.sgsaez.topgames.data.persistence.entities.GameList
-import com.sgsaez.topgames.data.persistence.entities.Image
-import com.sgsaez.topgames.data.repositories.favourite.FavouriteRepository
 import com.sgsaez.topgames.data.repositories.game.GameRepository
-import com.sgsaez.topgames.di.components.DaggerTopGamesApplicationComponentMock
+import com.sgsaez.topgames.data.repositories.game.NetGame
+import com.sgsaez.topgames.data.repositories.game.NetGameList
+import com.sgsaez.topgames.data.repositories.game.NetImage
 import com.sgsaez.topgames.di.modules.TopGamesApplicationModuleMock
 import com.sgsaez.topgames.presentation.view.activities.MainActivity
 import com.sgsaez.topgames.support.RecyclerViewMatcher
@@ -34,8 +25,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
-@RunWith(AndroidJUnit4::class)
+@RunWith(AndroidJUnit4ClassRunner::class)
 class GameListFragmentTest {
     @Rule
     @JvmField
@@ -127,15 +117,15 @@ class GameListFragmentTest {
     }
 
     private fun mockGames() {
-        val gameList = GameList(getMockGameList())
+        val gameList = getMockGameList()
         val mockSingle = Either.Right(gameList)
 
         whenever(mockGameRepository.getGames("0", "")).thenReturn(mockSingle)
     }
 
-    private fun getMockGameList(): List<Game> = (1..10).map {
+    private fun getMockGameList(): NetGameList = NetGameList((1..10).map {
         val number = +it
         val url = "goo.gl/svPzkf"
-        Game(it.toString(), "This is the game $number", "Game $number", Image(url))
-    }
+        NetGame(it.toString(), "This is the game $number", "Game $number", NetImage(url))
+    })
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@+id/gameListFragment">
+
+    <fragment
+        android:id="@+id/gameListFragment"
+        android:name="com.sgsaez.topgames.presentation.view.fragments.GameListFragment"
+        android:label="@string/label_game_list"
+        tools:layout="@layout/fragment_game_list">
+
+        <action
+            android:id="@+id/action_to_game_detail"
+            app:destination="@id/gameDetailFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/gameDetailFragment"
+        android:name="com.sgsaez.topgames.presentation.view.fragments.GameDetailFragment"
+        android:label="@string/label_game_detail"
+        tools:layout="@layout/fragment_game_detail">
+
+        <argument
+            android:name="game"
+            app:argType="com.sgsaez.topgames.presentation.model.Game" />
+
+    </fragment>
+
+</navigation>

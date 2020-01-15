@@ -2,20 +2,15 @@ package com.sgsaez.topgames.presentation.view.renderers
 
 import android.content.Context
 import android.content.res.Configuration
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.View
 import android.view.ViewGroup
 import com.sgsaez.topgames.R
-import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.support.BaseViewHolder
-import com.sgsaez.topgames.support.loadUrl
 import com.sgsaez.topgames.support.renderer.HolderSupport
-import kotlinx.android.synthetic.main.game_item.view.*
 
 class FavouriteListRenderer(private val recyclerView: RecyclerView, private val listener: FavouriteListener) {
 
-    private var favouriteList: List<GameViewModel> = ArrayList()
+    private var favouriteList: List<Game> = ArrayList()
     private var context: Context = recyclerView.context
 
     init {
@@ -32,12 +27,12 @@ class FavouriteListRenderer(private val recyclerView: RecyclerView, private val 
         }
     }
 
-    fun render(favourites: List<GameViewModel>) {
+    fun render(favourites: List<Game>) {
         favouriteList = favourites
         recyclerView.adapter!!.notifyDataSetChanged()
     }
 
-    fun removeFavourite(favouriteGame: GameViewModel) {
+    fun removeFavourite(favouriteGame: Game) {
         favouriteList = favouriteList.filter { it != favouriteGame }
         recyclerView.adapter!!.notifyDataSetChanged()
     }
@@ -60,7 +55,7 @@ class FavouriteListRenderer(private val recyclerView: RecyclerView, private val 
     }
 
     private inner class FavouriteViewHolder(parent: ViewGroup)  : BaseViewHolder(HolderSupport.getView(parent, R.layout.game_item)) {
-        fun bind(favourite: GameViewModel, listener: FavouriteListener) = with(itemView) {
+        fun bind(favourite: Game, listener: FavouriteListener) = with(itemView) {
             name.text = favourite.name
             image.loadUrl(favourite.imageUrl)
             close.setOnClickListener {
@@ -77,9 +72,9 @@ class FavouriteListRenderer(private val recyclerView: RecyclerView, private val 
 
     interface FavouriteListener {
 
-        fun onClickInGame(favouriteGame: GameViewModel)
+        fun onClickInGame(favouriteGame: Game)
 
-        fun onClickInClose(favouriteGame: GameViewModel)
+        fun onClickInClose(favouriteGame: Game)
 
     }
 

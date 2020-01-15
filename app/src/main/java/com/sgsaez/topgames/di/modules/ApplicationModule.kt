@@ -1,6 +1,5 @@
 package com.sgsaez.topgames.di.modules
 
-import android.arch.persistence.room.Room
 import android.content.Context
 import com.google.gson.Gson
 import com.sgsaez.topgames.TopGamesApplication
@@ -39,10 +38,9 @@ class ApplicationModule(val application: TopGamesApplication) {
 
     @Provides
     @Singleton
-    fun provideGameRepository(retrofit: Retrofit, database: TopGamesDatabase, connectivityChecker: ConnectivityChecker): GameRepository {
+    fun provideGameRepository(retrofit: Retrofit, connectivityChecker: ConnectivityChecker): GameRepository {
         return DefaultGameRepository(
                 retrofit.create(ApiService::class.java),
-                database.gameDao(),
                 connectivityChecker)
     }
 

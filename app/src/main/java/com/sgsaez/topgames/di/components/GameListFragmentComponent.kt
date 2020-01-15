@@ -1,10 +1,11 @@
 package com.sgsaez.topgames.di.components
 
+import androidx.lifecycle.ViewModelProvider
 import com.sgsaez.topgames.di.modules.GameListFragmentModule
-import com.sgsaez.topgames.presentation.presenters.GameListPresenter
 import dagger.Subcomponent
 
 @Subcomponent(modules = [GameListFragmentModule::class])
 interface GameListFragmentComponent {
-    fun presenter() : GameListPresenter
+    fun factory(): ViewModelProvider.Factory
 }
+

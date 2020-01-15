@@ -1,12 +1,12 @@
 package com.sgsaez.topgames.presentation.view
 
-import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.presentation.model.Game
 
 interface GameDetailView {
     fun addTitleToolbar(name: String)
     fun addDescription(content: String)
     fun addImage(url: String)
-    fun showSocialSharedNetworks(game: GameViewModel)
+    fun showSocialSharedNetworks(game: Game)
     fun showSaveFavourite()
     fun showFavouriteAlreadyExists()
     fun showGeneralError()

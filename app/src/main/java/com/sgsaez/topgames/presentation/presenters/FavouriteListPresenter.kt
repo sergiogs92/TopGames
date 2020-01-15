@@ -3,7 +3,7 @@ package com.sgsaez.topgames.presentation.presenters
 import com.sgsaez.topgames.domain.favourite.GetFavourites
 import com.sgsaez.topgames.domain.favourite.RemoveFavourite
 import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
-import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.view.FavouriteListView
 import com.sgsaez.topgames.support.domains.functional.fold
 
@@ -25,11 +25,11 @@ class FavouriteListPresenter(private val getFavourites: GetFavourites,
         }
     }
 
-    fun onFavouriteClicked(favourite: GameViewModel) {
+    fun onFavouriteClicked(favourite: Game) {
         view?.navigateToGame(favourite)
     }
 
-    fun onRemoveFavouriteGame(favourite: GameViewModel) {
+    fun onRemoveFavouriteGame(favourite: Game) {
         launchTask(action = { removeFavourite.execute(favourite) },
                 onCompleted = {
                     it.fold({ error -> error.toGetFavouriteError() },

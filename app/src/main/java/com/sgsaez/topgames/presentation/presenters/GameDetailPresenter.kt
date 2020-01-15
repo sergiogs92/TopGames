@@ -2,14 +2,14 @@ package com.sgsaez.topgames.presentation.presenters
 
 import com.sgsaez.topgames.domain.favourite.AddFavourite
 import com.sgsaez.topgames.domain.favourite.exception.FavoriteError
-import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.view.GameDetailView
 import com.sgsaez.topgames.support.domains.functional.fold
 import com.sgsaez.topgames.support.fromHtml
 
 class GameDetailPresenter(private val addFavourite: AddFavourite) : BasePresenter<GameDetailView>() {
 
-    fun onInit(game: GameViewModel) {
+    fun onInit(game: Game) {
         view?.addTitleToolbar(game.name)
         view?.addDescription(convertFromHtml(game.description))
         view?.addImage(game.imageUrl)
@@ -17,7 +17,7 @@ class GameDetailPresenter(private val addFavourite: AddFavourite) : BasePresente
 
     private fun convertFromHtml(description: String) = description.fromHtml().toString()
 
-    fun onSocialSharedClicked(game: GameViewModel) {
+    fun onSocialSharedClicked(game: Game) {
         view?.showSocialSharedNetworks(game)
     }
 
@@ -25,7 +25,7 @@ class GameDetailPresenter(private val addFavourite: AddFavourite) : BasePresente
         view?.resetStatusBarColor()
     }
 
-    fun onSaveFavouriteGame(game: GameViewModel) {
+    fun onSaveFavouriteGame(game: Game) {
         launchTask(action = { addFavourite.execute(game) },
                 onCompleted = {
                     it.fold({ error -> error.toSaveFavouriteError() },

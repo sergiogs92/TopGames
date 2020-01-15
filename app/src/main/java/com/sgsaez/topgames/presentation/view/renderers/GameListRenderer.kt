@@ -1,14 +1,14 @@
 package com.sgsaez.topgames.presentation.view.renderers
 
 import android.content.Context
-import android.content.res.Configuration
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sgsaez.topgames.R
-import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.support.BaseViewHolder
 import com.sgsaez.topgames.support.domains.Page
+import com.sgsaez.topgames.support.domains.isUpdateItems
 import com.sgsaez.topgames.support.loadUrl
 import com.sgsaez.topgames.support.renderer.HolderSupport
 import kotlinx.android.synthetic.main.game_item.*
@@ -19,7 +19,7 @@ private const val MAX_REQUEST_PAGE = 3
 
 class GameListRenderer(private val recyclerView: RecyclerView, private val listener: GameListener) {
 
-    private var gameList: List<GameViewModel> = ArrayList()
+    private var gameList: List<Game> = ArrayList()
     private var requestPage = -1
     private var shouldLoadMore: Boolean = true
     private var context: Context = recyclerView.context
@@ -46,25 +46,16 @@ class GameListRenderer(private val recyclerView: RecyclerView, private val liste
         }
     }
 
-    fun render(page: Page<GameViewModel>) {
-        gameList = page.items
-        requestPage = page.requestedPage
-        if (requestPage == MAX_REQUEST_PAGE || page.query.isNotEmpty()) shouldLoadMore = false
-        recyclerView.adapter!!.notifyDataSetChanged()
+    fun render(page: Page<Game>) {
+        if (page.isUpdateItems(gameList)) {
+            gameList = page.items
+            requestPage = page.requestedPage
+            if (requestPage == MAX_REQUEST_PAGE || page.query.isNotEmpty()) shouldLoadMore = false
+            recyclerView.adapter!!.notifyDataSetChanged()
+        }
     }
 
-    fun clearGames() {
-        gameList = ArrayList()
-        shouldLoadMore = true
-        recyclerView.adapter!!.notifyDataSetChanged()
-    }
-
-    private fun getColumnsNumber(): Int {
-        val orientation = context.resources.configuration.orientation
-        val portraitColumns = context.resources.getInteger(R.integer.portrait_columns)
-        val landscapeColumns = context.resources.getInteger(R.integer.landscape_columns)
-        return if (orientation == Configuration.ORIENTATION_PORTRAIT) portraitColumns else landscapeColumns
-    }
+    private fun getColumnsNumber(): Int = context.resources.getInteger(R.integer.portrait_columns)
 
     private inner class GameListRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -95,7 +86,7 @@ class GameListRenderer(private val recyclerView: RecyclerView, private val liste
 
     private inner class GameViewHolder internal constructor(parent: ViewGroup) : BaseViewHolder(HolderSupport.getView(parent, R.layout.game_item)) {
 
-        fun render(game: GameViewModel, listener: GameListener) {
+        fun render(game: Game, listener: GameListener) {
             name.text = game.name
             image.loadUrl(game.imageUrl)
             image.setOnClickListener { listener.onClickInGame(game) }
@@ -107,7 +98,7 @@ class GameListRenderer(private val recyclerView: RecyclerView, private val liste
 
     interface GameListener {
 
-        fun onClickInGame(game: GameViewModel)
+        fun onClickInGame(game: Game)
 
         fun onLoadMore(requestPage: Int)
 

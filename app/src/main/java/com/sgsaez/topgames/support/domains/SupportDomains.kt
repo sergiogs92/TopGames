@@ -1,5 +1,7 @@
 package com.sgsaez.topgames.support.domains
 
+import com.sgsaez.topgames.presentation.model.Game
+
 data class Page<T>(
         val requestedPage: Int = 0,
         val items: List<T> = emptyList(),
@@ -12,4 +14,8 @@ fun <T> Page<T>.update(other: Page<T>): Page<T> {
             items = this.items + other.items,
             query = if(other.query.isNotEmpty()) other.query else this.query
     )
+}
+
+fun <T> Page<T>.isUpdateItems(data: List<Game>): Boolean {
+    return this.items.size != data.size
 }

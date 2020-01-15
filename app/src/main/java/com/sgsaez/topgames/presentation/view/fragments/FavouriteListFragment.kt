@@ -2,21 +2,17 @@ package com.sgsaez.topgames.presentation.view.fragments
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.sgsaez.topgames.R
 import com.sgsaez.topgames.di.modules.FavouriteListFragmentModule
-import com.sgsaez.topgames.presentation.model.GameViewModel
+import com.sgsaez.topgames.presentation.model.Game
 import com.sgsaez.topgames.presentation.presenters.FavouriteListPresenter
 import com.sgsaez.topgames.presentation.view.FavouriteListView
 import com.sgsaez.topgames.presentation.view.renderers.FavouriteListRenderer
 import com.sgsaez.topgames.support.inflate
-import com.sgsaez.topgames.support.navigation.navigateTo
-import com.sgsaez.topgames.support.topGamesApplication
-import kotlinx.android.synthetic.main.fragment_favourite_list.*
 
 fun newFavouriteListInstance() = FavouriteListFragment()
 
@@ -49,11 +45,11 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
 
     private fun initRenderer() {
         renderer = FavouriteListRenderer(recyclerView, object : FavouriteListRenderer.FavouriteListener {
-            override fun onClickInGame(favouriteGame: GameViewModel) {
+            override fun onClickInGame(favouriteGame: Game) {
                 presenter.onFavouriteClicked(favouriteGame)
             }
 
-            override fun onClickInClose(favouriteGame: GameViewModel) {
+            override fun onClickInClose(favouriteGame: Game) {
                 presenter.onRemoveFavouriteGame(favouriteGame)
             }
 
@@ -66,11 +62,11 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
         presenter.onLoadFavourites()
     }
 
-    override fun addFavouriteToList(favouriteGames: List<GameViewModel>) {
+    override fun addFavouriteToList(favouriteGames: List<Game>) {
         renderer.render(favouriteGames)
     }
 
-    override fun removeFavouriteToList(favouriteGame: GameViewModel) {
+    override fun removeFavouriteToList(favouriteGame: Game) {
         renderer.removeFavourite(favouriteGame)
     }
 
@@ -78,7 +74,7 @@ class FavouriteListFragment : Fragment(), FavouriteListView {
         Toast.makeText(context, resources.getString(R.string.error_no_data_found), Toast.LENGTH_SHORT).show()
     }
 
-    override fun navigateToGame(favouriteGame: GameViewModel) {
+    override fun navigateToGame(favouriteGame: Game) {
         val detailsFragment = newGameDetailInstance(favouriteGame, true)
         activity!!.navigateTo(detailsFragment)
     }
