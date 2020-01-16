@@ -14,7 +14,7 @@ Kotlin App based on a list of games that includes search by game/s and favorites
 ![alt text](https://github.com/sergiogs92/TopGames/blob/master/img/list_landscape_games.png?raw=true)
 ## What's in the app?
 This application shows concepts such as:
-- MVP Architecture<br />
+- MVP Pattern in master branch and MVVM Pattern in refactor/mvvm branch<br />
 - Dependency injection with Dagger2<br />
 - Creating network requests with Retrofit<br />
 - Room Persistence Library. Offline first<br />
